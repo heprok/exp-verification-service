@@ -1,0 +1,57 @@
+server:
+  port: 8080
+  error:
+    include-stacktrace: never
+spring:
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    fallbackToSystemLocale: false
+  profiles:
+    active: ${env.spring_profiles_active:local}
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+  datasource:
+    url: jdbc:postgresql://${env.DB_HOST:localhost}:${env.DB_PORT:5432}/${env.spring_profiles_active}_verification
+    username: ${env.DB_USER:postgres}
+    password: ${env.DB_PASSWORD:postgres}
+    hikari:
+      idle-timeout: 20000
+      minimum-idle: 1
+      maximum-pool-size: 8
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        types:
+          print:
+            banner: false
+        metadata_builder_contributor: com.briolink.verificationservice.common.jpa.Functions
+    generate-ddl: false
+    show-sql: false
+    open-in-view: false
+  liquibase:
+    change-log: migration/master.xml
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://auth.${env.spring_profiles_active}.briolink.com/realms/briolink/protocol/openid-connect/certs
+cloud:
+  aws:
+    stack:
+      auto: false
+dgs:
+  graphql:
+    path: /
+    introspection:
+      enabled: false
+app:
+  app-endpoints:
+    user: http://user-service.${env.spring_profiles_active}.svc.cluster.local:8080/
+event:
+  publisher:
+    sns-name: bl-network-${env.spring_profiles_active}.fifo

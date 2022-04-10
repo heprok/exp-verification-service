@@ -1,0 +1,5 @@
+type Mutation {
+    # Verification
+    confirmVerification(id: ID!) : BaseResult
+    rejectVerification(id: ID!) : BaseResult
+}

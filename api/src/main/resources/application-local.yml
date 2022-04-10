@@ -1,0 +1,28 @@
+server:
+  port: 8300
+  error:
+    include-stacktrace: always
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+spring:
+  jpa:
+    show-sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://auth.dev.briolink.com/realms/briolink/protocol/openid-connect/certs
+app:
+  app-endpoints:
+    company: http://kravchuck.ddns.net/
+    companyservice: http://kravchuck.ddns.net:81/
+    user: http://localhost:8081/
+    email: http://localhost:8082/
+    frontend: http://nikonov.tplinkdns.com:3000/
+dgs:
+  graphql:
+    introspection:
+      enabled: true

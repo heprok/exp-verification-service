@@ -1,0 +1,26 @@
+# --- type
+
+type Suggestion {
+    id: ID
+    name: String!
+}
+
+# --- enum
+
+enum SuggestionType {
+    UserFullName
+
+    PlaceOfWork
+    JobPosition
+
+    University
+    Degree
+}
+
+# --- input
+
+input SuggestionOptions {
+    group: ObjectConfirmType!
+    type: SuggestionType!
+    query: String
+}

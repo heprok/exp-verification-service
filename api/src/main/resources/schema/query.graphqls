@@ -1,0 +1,8 @@
+type Query {
+    # Suggestion
+    getSuggestions(options: SuggestionOptions!): [Suggestion!]!
+
+    # Verification
+    getVerificationList(options: VerificationListOptions!): VerificationList!
+    getTabs: [VerificationTabWithCount!]!
+}

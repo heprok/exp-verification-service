@@ -1,0 +1,7 @@
+type User {
+    id: ID!
+    slug: String!
+    firstName: String!
+    lastName: String!
+    image: Image
+}

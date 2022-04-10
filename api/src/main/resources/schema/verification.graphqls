@@ -1,0 +1,53 @@
+# --- type
+
+type Verification{
+    id: ID!
+    user: User!
+    confirmData: ConfirmData!
+}
+
+type VerificationTabWithCount{
+    id: ID!
+    name: String!
+    value: Int!
+}
+
+type ObjectInfo {
+    id: ID!
+    slug: String
+    name: String!
+    image: Image
+}
+
+type ConfirmData {
+    objectInfo: ObjectInfo!
+    title: String!
+    startDate: Date!
+    endDate: Date
+}
+
+type VerificationList {
+    items: [Verification]!
+    itemsCountByTab: [VerificationTabWithCount!]!
+    totalItems: Int!
+}
+
+# --- input
+
+input VerificationListOptions {
+    limit: Int = 10
+    offset: Int = 0
+    tabId: ID!
+    filter: VerificationListFilterParameter
+}
+
+input VerificationListFilterParameter {
+    userFullNames: [String!]
+    placeOfWorkCompanyIds: [ID!]
+    jobTitles: [String!]
+    universityIds: [ID!]
+    degrees: [String!]
+}
+
+
+

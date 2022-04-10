@@ -1,0 +1,54 @@
+scalar Date
+scalar Url
+scalar Year
+
+directive @skipcodegen on FIELD_DEFINITION
+
+type Image {
+    url: Url
+}
+
+type Error {
+    message: String!
+}
+
+interface ResultWithUserErrors {
+    userErrors: [Error!]!
+}
+
+interface PaginatedList {
+    totalItems: Int!
+}
+
+type BaseResult {
+    success: Boolean!
+}
+
+type KeyValue {
+    key: ID!
+    value: String!
+}
+
+# --- enum
+
+enum SortDirection {
+    ASC
+    DESC
+}
+
+enum ObjectConfirmType {
+    WorkExperience
+    Education
+}
+
+# --- input
+
+input NumberRange {
+    start: Float
+    end: Float
+}
+
+input YearRange {
+    start: Year
+    end: Year
+}
