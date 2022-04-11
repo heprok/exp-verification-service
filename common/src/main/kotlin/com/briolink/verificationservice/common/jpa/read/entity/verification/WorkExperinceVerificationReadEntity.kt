@@ -1,11 +1,9 @@
 package com.briolink.verificationservice.common.jpa.read.entity.verification
 
+import com.briolink.verificationservice.common.jpa.read.entity.UserJobPositionReadEntity
 import com.briolink.verificationservice.common.types.ObjectConfirmId
-import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.ColumnTransformer
 import org.hibernate.annotations.Type
-import java.net.URL
-import java.time.LocalDate
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Embeddable
@@ -41,7 +39,7 @@ class WorkExperienceVerificationReadEntity(
 
     @Type(type = "jsonb")
     @Column(name = "data", nullable = false)
-    lateinit var userJobPositionData: UserJobPositionData
+    lateinit var userJobPositionData: UserJobPositionReadEntity.UserJobPositionData
 
     @PrePersist
     @PreUpdate
@@ -50,29 +48,6 @@ class WorkExperienceVerificationReadEntity(
         jobPositionTsv = jobPositionTitle
     }
 
-    data class UserJobPositionData(
-        @JsonProperty
-        val id: UUID,
-        @JsonProperty
-        val company: Company,
-        @JsonProperty
-        val title: String,
-        @JsonProperty
-        val startDate: LocalDate,
-        @JsonProperty
-        val endDate: LocalDate? = null
-    )
-
-    data class Company(
-        @JsonProperty
-        val id: UUID,
-        @JsonProperty
-        val name: String,
-        @JsonProperty
-        val slug: String,
-        @JsonProperty
-        val logo: URL?
-    )
 }
 
 @Embeddable

@@ -1,10 +1,10 @@
 package com.briolink.verificationservice.common.jpa.read.entity.verification
 
+import com.briolink.verificationservice.common.jpa.read.entity.UniversityReadEntity
 import com.briolink.verificationservice.common.types.ObjectConfirmId
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.ColumnTransformer
 import org.hibernate.annotations.Type
-import java.net.URL
 import java.time.LocalDate
 import java.util.UUID
 import javax.persistence.Column
@@ -55,22 +55,13 @@ class EducationVerificationReadEntity(
         @JsonProperty
         val id: UUID,
         @JsonProperty
-        val university: University,
+        val university: UniversityReadEntity.UniversityData,
         @JsonProperty
         val degree: String,
         @JsonProperty
         val startDate: LocalDate,
         @JsonProperty
         val endDate: LocalDate? = null
-    )
-
-    data class University(
-        @JsonProperty
-        val id: UUID,
-        @JsonProperty
-        val name: String,
-        @JsonProperty
-        val logo: URL?
     )
 }
 

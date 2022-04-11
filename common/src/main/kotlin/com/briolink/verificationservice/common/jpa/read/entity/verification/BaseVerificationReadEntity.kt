@@ -1,7 +1,7 @@
 package com.briolink.verificationservice.common.jpa.read.entity.verification
 
 import com.amazonaws.services.ec2.model.UserData
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.briolink.verificationservice.common.jpa.read.entity.UserReadEntity
 import com.vladmihalcea.hibernate.type.array.UUIDArrayType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import com.vladmihalcea.hibernate.type.search.PostgreSQLTSVectorType
@@ -11,7 +11,6 @@ import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.hibernate.annotations.TypeDefs
 import org.hibernate.annotations.UpdateTimestamp
-import java.net.URL
 import java.time.Instant
 import java.util.UUID
 import javax.persistence.Column
@@ -57,18 +56,5 @@ abstract class BaseVerificationReadEntity {
 
     @Type(type = "jsonb")
     @Column(name = "user_data", columnDefinition = "jsonb", nullable = false)
-    lateinit var userData: UserData
-
-    data class UserData(
-        @JsonProperty
-        val id: UUID,
-        @JsonProperty
-        val slug: String,
-        @JsonProperty
-        val image: URL?,
-        @JsonProperty
-        val firstName: String,
-        @JsonProperty
-        val lastName: String,
-    )
+    lateinit var userData: UserReadEntity.UserData
 }
