@@ -1,11 +1,9 @@
 package com.briolink.verificationservice.common.jpa.read.entity.verification
 
-import com.briolink.verificationservice.common.jpa.read.entity.UniversityReadEntity
+import com.briolink.verificationservice.common.jpa.read.entity.UserEducationReadEntity
 import com.briolink.verificationservice.common.types.ObjectConfirmId
-import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.ColumnTransformer
 import org.hibernate.annotations.Type
-import java.time.LocalDate
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Embeddable
@@ -41,8 +39,8 @@ class EducationVerificationReadEntity(
     lateinit var degreeTsv: String
 
     @Type(type = "jsonb")
-    @Column(name = "data", nullable = false)
-    lateinit var userEducationData: UserEducationData
+    @Column(name = "user_education_data", nullable = false)
+    lateinit var userEducationData: UserEducationReadEntity.UserEducationData
 
     @PrePersist
     @PreUpdate
@@ -50,19 +48,6 @@ class EducationVerificationReadEntity(
         universityNameTsv = universityName
         degreeTsv = degree
     }
-
-    data class UserEducationData(
-        @JsonProperty
-        val id: UUID,
-        @JsonProperty
-        val university: UniversityReadEntity.UniversityData,
-        @JsonProperty
-        val degree: String,
-        @JsonProperty
-        val startDate: LocalDate,
-        @JsonProperty
-        val endDate: LocalDate? = null
-    )
 }
 
 @Embeddable

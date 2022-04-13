@@ -11,11 +11,12 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "user_education", schema = "read")
-class UserEducationReadEntity : BaseReadEntity() {
+class UserEducationReadEntity(
     @Id
     @Column(name = "id", nullable = false)
     @Type(type = "pg-uuid")
-    lateinit var id: UUID
+    var id: UUID
+) : BaseReadEntity() {
 
     @Type(type = "pg-uuid")
     @Column(name = "university_id", nullable = false)
@@ -31,10 +32,10 @@ class UserEducationReadEntity : BaseReadEntity() {
         @JsonProperty
         val university: UniversityReadEntity.UniversityData,
         @JsonProperty
-        val degree: String,
+        var degree: String,
         @JsonProperty
-        val startDate: LocalDate,
+        var startDate: LocalDate,
         @JsonProperty
-        val endDate: LocalDate? = null
+        var endDate: LocalDate? = null
     )
 }

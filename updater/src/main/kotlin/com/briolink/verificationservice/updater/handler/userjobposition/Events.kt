@@ -1,12 +1,9 @@
-package com.briolink.verificationservice.updater.userjobposition
+package com.briolink.verificationservice.updater.handler.userjobposition
 
 import com.briolink.lib.event.Event
-import com.briolink.lib.location.model.LocationId
 import com.briolink.lib.sync.SyncData
 import com.briolink.lib.sync.SyncEvent
-import com.briolink.verificationservice.updater.handler.user.UserEventData
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.net.URL
 import java.time.LocalDate
 import java.util.UUID
 
@@ -34,6 +31,7 @@ data class UserJobPositionDeletedEventData(
     val isCurrent: Boolean = false
 )
 
-data class UserJobPositionEvent(override val data: UserJobPositionEventData) : Event<UserJobPositionEventData>("1.0")
+data class UserJobPositionCreatedEvent(override val data: UserJobPositionEventData) : Event<UserJobPositionEventData>("1.0")
+data class UserJobPositionUpdatedEvent(override val data: UserJobPositionEventData) : Event<UserJobPositionEventData>("1.0")
 data class UserJobPositionDeletedEvent(override val data: UserJobPositionDeletedEventData) : Event<UserJobPositionDeletedEventData>("1.0")
 data class UserJobPositionSyncEvent(override val data: SyncData<UserJobPositionEventData>) : SyncEvent<UserJobPositionEventData>("1.0")

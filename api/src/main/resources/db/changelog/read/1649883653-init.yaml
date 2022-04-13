@@ -1,0 +1,276 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1649883653-init
+      author: oleg@briolink.com
+      changes:
+        - createTable:
+            tableName: company
+            schemaName: read
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: user
+            schemaName: read
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: university
+            schemaName: read
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: user_job_position
+            schemaName: read
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: company_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+
+        - sql:
+            sql: create index idx_user_job_position_company_id on read.user_job_position using btree (company_id)
+
+        - createTable:
+            tableName: user_education
+            schemaName: read
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: university_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: create index idx_user_education_university_id on read.user_education using btree (university_id)
+
+        - createTable:
+            tableName: education_verification
+            schemaName: read
+            columns:
+              - column:
+                  name: user_education_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_full_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_full_name_tsv
+                  type: tsvector
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_to_confirm_ids
+                  type: uuid[]
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reject_by
+                  type: uuid
+              - column:
+                  name: confirm_by
+                  type: uuid
+              - column:
+                  name: created
+                  type: timestamp
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: changed
+                  type: timestamp
+              - column:
+                  name: user_data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: university_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: university_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: university_name_tsv
+                  type: tsvector
+                  constraints:
+                    nullable: false
+              - column:
+                  name: degree
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: degree_tsv
+                  type: tsvector
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+
+        - sql:
+            sql: create index idx_user_educaiton_verification_user_id on read.user_education_verification using btree (user_id)
+        - sql:
+            sql: create index idx_user_education_verification_university_id on read.user_education_verification using btree (university_id)
+        - sql:
+            sql: create index idx_user_education_verification_degree_tsv on read.user_education_verification using gin (degree_tsv)
+        - sql:
+            sql: create index idx_user_education_verification_university_name_tsv on read.user_education_verification using gin (university_name_tsv)
+        - sql:
+            sql: create index idx_user_education_verification_user_full_name_tsv on read.user_education_verification using gin (user_full_name_tsv)
+        - sql:
+            sql: create index idx_user_education_verification_user_to_confirm_ids on read.user_education_verification using gin (user_to_confirm_ids, pg_catalog.array_ops)
+
+        - createTable:
+            tableName: work_experience_verification
+            schemaName: read
+            columns:
+              - column:
+                  name: user_job_position_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_full_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_full_name_tsv
+                  type: tsvector
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_to_confirm_ids
+                  type: uuid[]
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reject_by
+                  type: uuid
+              - column:
+                  name: confirm_by
+                  type: uuid
+              - column:
+                  name: created
+                  type: timestamp
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: changed
+                  type: timestamp
+              - column:
+                  name: user_data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: company_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: company_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: company_name_tsv
+                  type: tsvector
+                  constraints:
+                    nullable: false
+              - column:
+                  name: job_position_title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: job_position_title_tsv
+                  type: tsvector
+                  constraints:
+                    nullable: false
+              - column:
+                  name: data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: create index idx_work_experience_verification_user_full_name_tsv on read.work_experience_verification using gin (user_full_name_tsv)
+        - sql:
+            sql: create index idx_work_experience_verification_user_to_confirm_ids on read.work_experience_verification using gin (user_to_confirm_ids, pg_catalog.array_ops)
+        - sql:
+            sql: create index idx_work_experience_verification_company_name_tsv on read.work_experience_verification using gin (company_name_tsv)
+        - sql:
+            sql: create index idx_work_experience_verification_job_position_title_tsv on read.work_experience_verification using gin (job_position_title_tsv)
+        - sql:
+            sql: create index idx_work_experience_verification_user_id on read.work_experience_verification using btree (user_id)
+        - sql:
+            sql: create index idx_work_experience_verification_company_id on read.work_experience_verification using btree (company_id)

@@ -10,7 +10,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "company", schema = "read")
+@Table(name = "user", schema = "read")
 class UserReadEntity(
 
     @Id

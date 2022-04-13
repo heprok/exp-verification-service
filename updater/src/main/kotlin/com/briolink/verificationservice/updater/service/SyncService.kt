@@ -47,31 +47,10 @@ class SyncService(
     }
 
     override fun getListSyncLogIdAtConnection(syncId: Int): List<SyncLogId> {
-        val listSyncLogId =
-            listOf(
-                SyncLogId().apply {
-                    this.syncId = syncId
-                    this._service = ServiceEnum.Connection.id
-                    this._objectSync = ObjectSyncEnum.Connection.value
-                },
-                SyncLogId().apply {
-                    this.syncId = syncId
-                    this._service = ServiceEnum.Connection.id
-                    this._objectSync = ObjectSyncEnum.ConnectionCompanyRole.value
-                },
-            )
-        return listSyncLogId
+        return listOf()
     }
 
     override fun getListSyncLogIdAtCompanyService(syncId: Int): List<SyncLogId> {
-        val listSyncLogId =
-            listOf(
-                SyncLogId().apply {
-                    this.syncId = syncId
-                    this._service = ServiceEnum.CompanyService.id
-                    this._objectSync = ObjectSyncEnum.CompanyService.value
-                },
-            )
-        return listSyncLogId
+        return listOf()
     }
 }

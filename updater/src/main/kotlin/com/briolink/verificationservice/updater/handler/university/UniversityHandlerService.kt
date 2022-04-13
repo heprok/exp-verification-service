@@ -5,6 +5,8 @@ import com.briolink.verificationservice.common.jpa.read.repository.UniversityRea
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.net.URL
+import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 @Service
 @Transactional
@@ -21,4 +23,7 @@ class UniversityHandlerService(
             return universityReadRepository.save(this)
         }
     }
+
+    fun getUniversityData(id: UUID): UniversityReadEntity.UniversityData =
+        universityReadRepository.findById(id).orElseThrow { throw EntityNotFoundException("University $id not found") }.data
 }

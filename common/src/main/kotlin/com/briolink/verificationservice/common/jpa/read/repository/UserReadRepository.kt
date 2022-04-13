@@ -1,8 +1,7 @@
-package com.briolink.verificationservice.common.jpa.read.repository;
+package com.briolink.verificationservice.common.jpa.read.repository
 
 import com.briolink.verificationservice.common.jpa.read.entity.UserReadEntity
-import java.util.UUID
 import org.springframework.data.jpa.repository.JpaRepository
+import java.util.UUID
 
-interface UserReadRepository : JpaRepository<UserReadEntity, UUID> {
-}
+interface UserReadRepository : JpaRepository<UserReadEntity, UUID>

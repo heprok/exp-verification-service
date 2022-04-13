@@ -1,4 +1,4 @@
-package com.briolink.verificationservice.updater.userjobposition
+package com.briolink.verificationservice.updater.handler.userjobposition
 
 import com.briolink.verificationservice.common.jpa.read.entity.UserJobPositionReadEntity
 import com.briolink.verificationservice.common.jpa.read.repository.CompanyReadRepository
@@ -24,7 +24,6 @@ class UserJobPositionHandlerService(
                 )
             }
         ).apply {
-            data.id = domain.id
             data.title = domain.title
             data.startDate = domain.startDate!!
             data.endDate = domain.endDate

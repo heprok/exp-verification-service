@@ -1,6 +1,5 @@
 package com.briolink.verificationservice.common.jpa.read.entity.verification
 
-import com.amazonaws.services.ec2.model.UserData
 import com.briolink.verificationservice.common.jpa.read.entity.UserReadEntity
 import com.vladmihalcea.hibernate.type.array.UUIDArrayType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
@@ -39,11 +38,11 @@ abstract class BaseVerificationReadEntity {
     lateinit var userToConfirmIds: Array<UUID>
 
     @Type(type = "pg-uuid")
-    @Column(name = "reject_by", nullable = false)
+    @Column(name = "reject_by")
     var rejectBy: UUID? = null
 
     @Type(type = "pg-uuid")
-    @Column(name = "confirm_by", nullable = false)
+    @Column(name = "confirm_by")
     var confirmBy: UUID? = null
 
     @CreationTimestamp

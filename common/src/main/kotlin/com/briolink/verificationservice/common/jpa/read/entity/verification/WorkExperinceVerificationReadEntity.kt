@@ -47,7 +47,6 @@ class WorkExperienceVerificationReadEntity(
         companyNameTsv = companyName
         jobPositionTsv = jobPositionTitle
     }
-
 }
 
 @Embeddable

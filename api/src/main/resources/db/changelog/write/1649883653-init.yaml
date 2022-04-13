@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1649883653-init
+      author: oleg@briolink.com
+      changes:
+        - createTable:
+            tableName: object_confirm_type
+            schemaName: write
+            columns:
+              - column:
+                  name: id
+                  type: smallint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+        - sql:
+            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (1, 'Work experience'), (2, 'Education')
+        - createTable:
+            tableName: verification
+            schemaName: write
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: object_confirm_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: object_confirm_type_id
+                  type: smallint
+                  constraints:
+                    foreignKeyName: fk_verification_object_confirm_type_id
+                    references: write.object_confirm_type(id)
+                    nullable: false
+              - column:
+                  name: user_to_confirm_ids
+                  type: uuid[]
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reject_by
+                  type: uuid
+              - column:
+                  name: confirm_by
+                  type: uuid
+              - column:
+                  name: created
+                  type: timestamp
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: changed
+                  type: datetime
+                  constraints:
+                    nullable: true
+        - sql:
+            sql: create index idx_verification_user_id on write.verification using btree(user_id)
+        - sql:
+            sql: create index idx_verification_object_confirm_id on write.verification using btree(object_confirm_id)
+        - sql:
+            sql: create index idx_verification_user_to_confirm_ids on write.verification using gin (user_to_confirm_ids, pg_catalog.array_ops)

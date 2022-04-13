@@ -1,11 +1,10 @@
 package com.briolink.verificationservice.common.jpa.write.entity
 
-import java.time.Instant
-import java.time.LocalDate
-import java.util.UUID
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
+import java.time.Instant
+import java.util.UUID
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -35,11 +34,11 @@ class VerificationWriteEntity : BaseWriteEntity() {
     lateinit var userToConfirmIds: Array<UUID>
 
     @Type(type = "pg-uuid")
-    @Column(name = "reject_by", nullable = false)
+    @Column(name = "reject_by")
     var rejectBy: UUID? = null
 
     @Type(type = "pg-uuid")
-    @Column(name = "confirm_by", nullable = false)
+    @Column(name = "confirm_by")
     var confirmBy: UUID? = null
 
     @CreationTimestamp
