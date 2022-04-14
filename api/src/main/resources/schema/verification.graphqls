@@ -1,3 +1,10 @@
+# --- enum
+
+enum VerificationConfirmAction {
+    Confirm
+    Reject
+}
+
 # --- type
 
 type Verification{
@@ -32,6 +39,16 @@ type VerificationList {
     totalItems: Int!
 }
 
+type VerificationRequestResult {
+    success: Boolean!
+    userErrors: [Error]!
+}
+
+type ConfirmVerificationResult {
+    success: Boolean!
+    userErrors: [Error]!
+}
+
 # --- input
 
 input VerificationListOptions {
@@ -48,6 +65,7 @@ input VerificationListFilterParameter {
     universityIds: [ID!]
     degrees: [String!]
 }
+
 
 
 

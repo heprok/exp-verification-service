@@ -1,5 +1,7 @@
 type Mutation {
     # Verification
-    confirmVerification(id: ID!) : BaseResult
-    rejectVerification(id: ID!) : BaseResult
+    confirmVerification(id: ID!, action: VerificationConfirmAction!) : ConfirmVerificationResult!
+
+    # Local methods
+    verificationRequest(byUserId: ID!, objectKey: ObjectKey!, usersToConfirmIds: [ID!]!): VerificationRequestResult!
 }

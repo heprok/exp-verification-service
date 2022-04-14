@@ -4,6 +4,27 @@ databaseChangeLog:
       author: oleg@briolink.com
       changes:
         - createTable:
+            tableName: event_store
+            schemaName: write
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: data
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created
+                  type: timestamp
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+        - createTable:
             tableName: object_confirm_type
             schemaName: write
             columns:
@@ -47,11 +68,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: reject_by
+                  name: action_type
+                  type: varchar(30)
+              - column:
+                  name: action_by
                   type: uuid
               - column:
-                  name: confirm_by
-                  type: uuid
+                  name: action_at
+                  type: timestamp
               - column:
                   name: created
                   type: timestamp
@@ -60,7 +84,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: changed
-                  type: datetime
+                  type: timestamp
                   constraints:
                     nullable: true
         - sql:

@@ -1,5 +1,6 @@
 package com.briolink.verificationservice.updater.handler.userjobposition
 
+import com.briolink.verificationservice.common.enumeration.JobPositionStatusEnum
 import com.briolink.verificationservice.common.jpa.read.entity.UserJobPositionReadEntity
 import com.briolink.verificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.verificationservice.common.jpa.read.repository.UserJobPositionReadRepository
@@ -24,9 +25,15 @@ class UserJobPositionHandlerService(
                 )
             }
         ).apply {
+            status = JobPositionStatusEnum.valueOf(domain.status.name)
+
+            if (data.company.id != domain.companyId)
+                data.company = companyHandlerService.getCompanyData(domain.companyId)
+
             data.title = domain.title
             data.startDate = domain.startDate!!
             data.endDate = domain.endDate
+
             return userJobPositionReadRepository.save(this)
         }
     }

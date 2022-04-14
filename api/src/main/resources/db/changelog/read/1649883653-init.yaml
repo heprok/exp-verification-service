@@ -55,7 +55,17 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
+                  name: status
+                  type: smallint
+                  constraints:
+                    primaryKey: true
+              - column:
                   name: company_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
                   type: uuid
                   constraints:
                     nullable: false
@@ -67,6 +77,10 @@ databaseChangeLog:
 
         - sql:
             sql: create index idx_user_job_position_company_id on read.user_job_position using btree (company_id)
+        - sql:
+            sql: create index idx_user_job_position_company_id on read.user_job_position using btree (user_id)
+        - sql:
+            sql: create index idx_user_job_position_status on read.user_job_position using gin (status)
 
         - createTable:
             tableName: user_education
@@ -79,6 +93,11 @@ databaseChangeLog:
                     primaryKey: true
               - column:
                   name: university_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
                   type: uuid
                   constraints:
                     nullable: false
