@@ -40,7 +40,32 @@ databaseChangeLog:
                     nullable: false
                     unique: true
         - sql:
-            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (1, 'Work experience'), (2, 'Education')
+            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (1, 'Work experience')
+        - sql:
+            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (2, 'Education')
+        - createTable:
+            tableName: verification_status
+            schemaName: write
+            columns:
+              - column:
+                  name: id
+                  type: smallint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+        - sql:
+            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (1, 'Not confirmed')
+        - sql:
+            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (2, 'Pending')
+        - sql:
+            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (3, 'Verified')
+        - sql:
+            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (4, 'Rejected')
         - createTable:
             tableName: verification
             schemaName: write
@@ -63,13 +88,17 @@ databaseChangeLog:
                     references: write.object_confirm_type(id)
                     nullable: false
               - column:
+                  name: status_id
+                  type: smallint
+                  constraints:
+                    foreignKeyName: fk_verification_verification_status_id
+                    references: write.verification_status(id)
+                    nullable: false
+              - column:
                   name: user_to_confirm_ids
                   type: uuid[]
                   constraints:
                     nullable: false
-              - column:
-                  name: action_type
-                  type: varchar(30)
               - column:
                   name: action_by
                   type: uuid

@@ -1,6 +1,6 @@
 package com.briolink.verificationservice.common.jpa.read.entity.verification
 
-import com.briolink.verificationservice.common.enumeration.ActionTypeEnum
+import com.briolink.verificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.verificationservice.common.jpa.read.entity.UserReadEntity
 import com.vladmihalcea.hibernate.type.array.UUIDArrayType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
@@ -12,8 +12,6 @@ import org.hibernate.annotations.TypeDefs
 import java.time.Instant
 import java.util.UUID
 import javax.persistence.Column
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
@@ -45,9 +43,14 @@ abstract class BaseVerificationReadEntity {
     @Column(name = "user_to_confirm_ids", columnDefinition = "uuid[]", nullable = false)
     lateinit var userToConfirmIds: Array<UUID>
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "action_type")
-    var actionType: ActionTypeEnum? = null
+    @Column(name = "status", nullable = false)
+    private var _status: Int = VerificationStatusEnum.NotConfirmed.value
+
+    var status: VerificationStatusEnum
+        get() = VerificationStatusEnum.ofValue(_status)
+        set(value) {
+            _status = value.value
+        }
 
     @Type(type = "pg-uuid")
     @Column(name = "action_by")

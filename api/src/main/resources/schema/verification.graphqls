@@ -5,12 +5,25 @@ enum VerificationConfirmAction {
     Reject
 }
 
+enum VerificationStatus {
+    NotConfirmed
+    Pending
+    Confirmed
+    Rejected
+}
+
 # --- type
 
 type Verification{
     id: ID!
+    status: VerificationStatus!
     user: User!
     confirmData: ConfirmData!
+}
+
+type VerificationCreatedResult{
+    id: ID!
+    status: VerificationStatus!
 }
 
 type VerificationTabWithCount{
@@ -40,7 +53,7 @@ type VerificationList {
 }
 
 type VerificationRequestResult {
-    success: Boolean!
+    result: VerificationCreatedResult
     userErrors: [Error]!
 }
 

@@ -1,6 +1,5 @@
 package com.briolink.verificationservice.common.jpa.read.entity
 
-import com.briolink.verificationservice.common.enumeration.EducationStatusEnum
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.Type
 import java.time.LocalDate
@@ -26,15 +25,6 @@ class UserEducationReadEntity(
     @Type(type = "pg-uuid")
     @Column(name = "user_id", nullable = false)
     lateinit var userId: UUID
-
-    @Column(name = "status", nullable = false)
-    private var _status: Int = EducationStatusEnum.NotConfirmed.value
-
-    var status: EducationStatusEnum
-        get() = EducationStatusEnum.ofValue(this._status)
-        set(value) {
-            this._status = value.value
-        }
 
     @Column(name = "data", nullable = false)
     @Type(type = "jsonb")

@@ -97,11 +97,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: status
-                  type: smallint
-                  constraints:
-                    nullable: false
-              - column:
                   name: user_id
                   type: uuid
                   constraints:
@@ -152,8 +147,10 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: action_type
-                  type: varchar(30)
+                  name: status
+                  type: smallint
+                  constraints:
+                    nullable: false
               - column:
                   name: action_by
                   type: uuid
@@ -255,8 +252,10 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: action_type
-                  type: varchar(30)
+                  name: status
+                  type: smallint
+                  constraints:
+                    nullable: false
               - column:
                   name: action_by
                   type: uuid

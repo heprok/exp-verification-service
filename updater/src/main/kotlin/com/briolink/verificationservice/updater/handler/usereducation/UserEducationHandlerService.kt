@@ -1,6 +1,5 @@
 package com.briolink.verificationservice.updater.handler.usereducation
 
-import com.briolink.verificationservice.common.enumeration.EducationStatusEnum
 import com.briolink.verificationservice.common.jpa.read.entity.UserEducationReadEntity
 import com.briolink.verificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.verificationservice.common.jpa.read.repository.UserEducationReadRepository
@@ -30,7 +29,6 @@ class UserEducationHandlerService(
             }
         ).apply {
             userId = domain.userId
-            status = domain.status.let { EducationStatusEnum.ofValue(it.value) }
             data.degree = domain.degree
             data.startDate = domain.startDate
             data.endDate = domain.endDate

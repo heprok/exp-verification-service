@@ -45,6 +45,7 @@ class WorkExperienceVerificationReadEntity() : BaseVerificationReadEntity() {
     fun tsvUpdate() {
         companyNameTsv = companyName
         jobPositionTitleTsv = jobPositionTitle
+        userFullNameTsv = userFullName
     }
 }
 

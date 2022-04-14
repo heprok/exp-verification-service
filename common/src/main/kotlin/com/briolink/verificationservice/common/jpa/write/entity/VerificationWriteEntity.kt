@@ -1,6 +1,5 @@
 package com.briolink.verificationservice.common.jpa.write.entity
 
-import com.briolink.verificationservice.common.enumeration.ActionTypeEnum
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
@@ -9,8 +8,6 @@ import java.util.UUID
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
@@ -36,9 +33,9 @@ class VerificationWriteEntity : BaseWriteEntity() {
     @Column(name = "user_to_confirm_ids", columnDefinition = "uuid[]", nullable = false)
     lateinit var userToConfirmIds: Array<UUID>
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "action_type")
-    var actionType: ActionTypeEnum? = null
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
+    @JoinColumn(name = "status_id", nullable = false)
+    lateinit var status: VerificationStatusWriteEntity
 
     @Type(type = "pg-uuid")
     @Column(name = "action_by")

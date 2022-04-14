@@ -1,12 +1,15 @@
 package com.briolink.verificationservice.api.graphql.mutation
 
 import com.briolink.verificationservice.api.exception.UserErrorGraphQlException
+import com.briolink.verificationservice.api.mapper.fromWrite
 import com.briolink.verificationservice.api.service.verifcation.education.EducationVerificationService
 import com.briolink.verificationservice.api.service.verifcation.workexperince.WorkExperienceVerificationService
+import com.briolink.verificationservice.api.types.ConfirmVerificationResult
 import com.briolink.verificationservice.api.types.Error
 import com.briolink.verificationservice.api.types.ObjectConfirmType
 import com.briolink.verificationservice.api.types.ObjectKey
 import com.briolink.verificationservice.api.types.VerificationConfirmAction
+import com.briolink.verificationservice.api.types.VerificationCreatedResult
 import com.briolink.verificationservice.api.types.VerificationRequestResult
 import com.briolink.verificationservice.api.util.SecurityUtil
 import com.briolink.verificationservice.common.enumeration.ActionTypeEnum
@@ -40,14 +43,14 @@ class VerificationMutation(
                     objectId = UUID.fromString(objectKey.id),
                     userConfirmIds = usersToConfirmIds.map { UUID.fromString(it) }
                 )
+            }.let {
+                VerificationRequestResult(
+                    VerificationCreatedResult.fromWrite(it),
+                    userErrors = listOf()
+                )
             }
-            VerificationRequestResult(
-                success = true,
-                userErrors = listOf()
-            )
         } catch (ex: UserErrorGraphQlException) {
             VerificationRequestResult(
-                success = false,
                 userErrors = listOf(Error(ex.message))
             )
         }
@@ -58,7 +61,7 @@ class VerificationMutation(
     fun confirmVerification(
         @InputArgument id: String,
         @InputArgument action: VerificationConfirmAction,
-    ): VerificationRequestResult {
+    ): ConfirmVerificationResult {
         return try {
             when (action) {
                 VerificationConfirmAction.Confirm -> workExperienceVerificationService.confirmVerification(
@@ -73,12 +76,12 @@ class VerificationMutation(
                 )
             }
 
-            VerificationRequestResult(
+            ConfirmVerificationResult(
                 success = true,
                 userErrors = listOf()
             )
         } catch (ex: UserErrorGraphQlException) {
-            VerificationRequestResult(
+            ConfirmVerificationResult(
                 success = false,
                 userErrors = listOf(Error(ex.message))
             )

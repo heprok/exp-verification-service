@@ -15,13 +15,15 @@ enum class ObjectConfirmType(@JsonValue val value: Int) {
     }
 }
 
-enum class ActionType(@JsonValue val value: Int) {
-    Confirmed(1),
-    Rejected(2);
+enum class VerificationStatus(@JsonValue val value: Int) {
+    NotConfirmed(1),
+    Pending(2),
+    Confirmed(3),
+    Rejected(4);
 
     companion object {
-        private val map = values().associateBy(ActionType::value)
-        fun fromInt(type: Int): ActionType = map[type]!!
+        private val map = values().associateBy(VerificationStatus::value)
+        fun fromInt(type: Int): VerificationStatus = map[type]!!
     }
 }
 
@@ -39,7 +41,7 @@ data class Verification(
     @JsonProperty
     val actionBy: UUID?,
     @JsonProperty
-    val actionType: ActionType?,
+    val status: VerificationStatus,
     @JsonProperty
     var actionAt: Instant?,
     @JsonProperty

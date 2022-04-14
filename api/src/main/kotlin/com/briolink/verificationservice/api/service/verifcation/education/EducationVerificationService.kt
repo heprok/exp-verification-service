@@ -2,8 +2,8 @@ package com.briolink.verificationservice.api.service.verifcation.education
 
 import com.briolink.lib.event.publisher.EventPublisher
 import com.briolink.verificationservice.api.service.verifcation.VerificationService
-import com.briolink.verificationservice.common.enumeration.EducationStatusEnum
 import com.briolink.verificationservice.common.enumeration.ObjectConfirmTypeEnum
+import com.briolink.verificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.verificationservice.common.jpa.read.repository.UserEducationReadRepository
 import com.briolink.verificationservice.common.jpa.write.repository.VerificationWriteRepository
 import org.springframework.stereotype.Service
@@ -24,5 +24,5 @@ class EducationVerificationService(
     override val objectTypeVerification: ObjectConfirmTypeEnum = ObjectConfirmTypeEnum.Education
 
     override fun checkExistNotConfirmedObjectIdAndUserId(objectId: UUID, userId: UUID): Boolean =
-        userEducationReadRepository.existsByIdAndUserIdAndStatus(userId, objectId, EducationStatusEnum.NotConfirmed.value)
+        userEducationReadRepository.existsByIdAndUserIdAndStatus(userId, objectId, VerificationStatusEnum.NotConfirmed.value)
 }
