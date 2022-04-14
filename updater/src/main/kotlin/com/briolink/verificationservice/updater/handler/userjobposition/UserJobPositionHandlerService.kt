@@ -7,6 +7,8 @@ import com.briolink.verificationservice.common.jpa.read.repository.UserJobPositi
 import com.briolink.verificationservice.updater.handler.company.CompanyHandlerService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 @Service
 @Transactional
@@ -37,6 +39,11 @@ class UserJobPositionHandlerService(
             return userJobPositionReadRepository.save(this)
         }
     }
+
+    fun getById(id: UUID): UserJobPositionReadEntity =
+        userJobPositionReadRepository.findById(id).orElseThrow {
+            EntityNotFoundException("UserJobPosition with id $id not found")
+        }
 
     fun updateCompany(company: CompanyReadRepository) {
         TODO("not implemented")

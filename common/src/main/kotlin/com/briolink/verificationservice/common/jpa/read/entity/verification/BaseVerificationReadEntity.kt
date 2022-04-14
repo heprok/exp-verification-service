@@ -1,18 +1,20 @@
 package com.briolink.verificationservice.common.jpa.read.entity.verification
 
+import com.briolink.verificationservice.common.enumeration.ActionTypeEnum
 import com.briolink.verificationservice.common.jpa.read.entity.UserReadEntity
 import com.vladmihalcea.hibernate.type.array.UUIDArrayType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import com.vladmihalcea.hibernate.type.search.PostgreSQLTSVectorType
 import org.hibernate.annotations.ColumnTransformer
-import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.hibernate.annotations.TypeDefs
-import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 import java.util.UUID
 import javax.persistence.Column
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
+import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
 @TypeDefs(
@@ -22,6 +24,12 @@ import javax.persistence.MappedSuperclass
 )
 @MappedSuperclass
 abstract class BaseVerificationReadEntity {
+
+    @Id
+    @Type(type = "pg-uuid")
+    @Column(name = "id", nullable = false)
+    lateinit var id: UUID
+
     @Type(type = "pg-uuid")
     @Column(name = "user_id", nullable = false)
     lateinit var userId: UUID
@@ -37,19 +45,20 @@ abstract class BaseVerificationReadEntity {
     @Column(name = "user_to_confirm_ids", columnDefinition = "uuid[]", nullable = false)
     lateinit var userToConfirmIds: Array<UUID>
 
-    @Type(type = "pg-uuid")
-    @Column(name = "reject_by")
-    var rejectBy: UUID? = null
+    @Enumerated(EnumType.STRING)
+    @Column(name = "action_type")
+    var actionType: ActionTypeEnum? = null
 
     @Type(type = "pg-uuid")
-    @Column(name = "confirm_by")
-    var confirmBy: UUID? = null
+    @Column(name = "action_by")
+    var actionBy: UUID? = null
 
-    @CreationTimestamp
+    @Column(name = "action_at")
+    var actionAt: Instant? = null
+
     @Column(name = "created", nullable = false)
     lateinit var created: Instant
 
-    @UpdateTimestamp
     @Column(name = "changed")
     var changed: Instant? = null
 

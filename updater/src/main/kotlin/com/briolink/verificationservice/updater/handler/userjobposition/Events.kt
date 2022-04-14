@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 import java.time.LocalDate
 import java.util.UUID
 
-enum class JobPositionStatusEnum(@JsonValue val value: Int) {
+enum class JobPositionStatus(@JsonValue val value: Int) {
     @JsonProperty("1")
     NotConfirmed(1),
 
@@ -32,7 +32,7 @@ data class UserJobPositionEventData(
     @JsonProperty
     val endDate: LocalDate? = null,
     @JsonProperty
-    val status: JobPositionStatusEnum,
+    val status: JobPositionStatus,
     @JsonProperty
     val companyId: UUID,
     @JsonProperty

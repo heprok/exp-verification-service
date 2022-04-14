@@ -1,7 +1,8 @@
 package com.briolink.verificationservice.api.graphql.mutation
 
 import com.briolink.verificationservice.api.exception.UserErrorGraphQlException
-import com.briolink.verificationservice.api.service.verifcation.workexperince.VerificationWorkExperienceService
+import com.briolink.verificationservice.api.service.verifcation.education.EducationVerificationService
+import com.briolink.verificationservice.api.service.verifcation.workexperince.WorkExperienceVerificationService
 import com.briolink.verificationservice.api.types.Error
 import com.briolink.verificationservice.api.types.ObjectConfirmType
 import com.briolink.verificationservice.api.types.ObjectKey
@@ -17,7 +18,8 @@ import java.util.UUID
 
 @DgsComponent
 class VerificationMutation(
-    private val verificationWorkExperienceService: VerificationWorkExperienceService
+    private val workExperienceVerificationService: WorkExperienceVerificationService,
+    private val educationVerificationService: EducationVerificationService,
 ) {
     @DgsMutation
     @PreAuthorize("@servletUtil.isIntranet()")
@@ -28,13 +30,15 @@ class VerificationMutation(
     ): VerificationRequestResult {
         return try {
             when (objectKey.type) {
-                ObjectConfirmType.WorkExperience -> verificationWorkExperienceService.addVerification(
+                ObjectConfirmType.WorkExperience -> workExperienceVerificationService.addVerification(
                     userId = UUID.fromString(byUserId),
                     objectId = UUID.fromString(objectKey.id),
                     userConfirmIds = usersToConfirmIds.map { UUID.fromString(it) }
                 )
-                ObjectConfirmType.Education -> throw UserErrorGraphQlException(
-                    message = "Object type ${objectKey.type} is not supported yet",
+                ObjectConfirmType.Education -> educationVerificationService.addVerification(
+                    userId = UUID.fromString(byUserId),
+                    objectId = UUID.fromString(objectKey.id),
+                    userConfirmIds = usersToConfirmIds.map { UUID.fromString(it) }
                 )
             }
             VerificationRequestResult(
@@ -57,12 +61,12 @@ class VerificationMutation(
     ): VerificationRequestResult {
         return try {
             when (action) {
-                VerificationConfirmAction.Confirm -> verificationWorkExperienceService.confirmVerification(
+                VerificationConfirmAction.Confirm -> workExperienceVerificationService.confirmVerification(
                     id = UUID.fromString(id),
                     byUserId = SecurityUtil.currentUserId,
                     actionType = ActionTypeEnum.Confirmed
                 )
-                VerificationConfirmAction.Reject -> verificationWorkExperienceService.confirmVerification(
+                VerificationConfirmAction.Reject -> workExperienceVerificationService.confirmVerification(
                     id = UUID.fromString(id),
                     byUserId = SecurityUtil.currentUserId,
                     actionType = ActionTypeEnum.Rejected

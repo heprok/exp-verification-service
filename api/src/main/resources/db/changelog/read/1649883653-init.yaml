@@ -58,7 +58,7 @@ databaseChangeLog:
                   name: status
                   type: smallint
                   constraints:
-                    primaryKey: true
+                    nullable: false
               - column:
                   name: company_id
                   type: uuid
@@ -97,6 +97,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: status
+                  type: smallint
+                  constraints:
+                    nullable: false
+              - column:
                   name: user_id
                   type: uuid
                   constraints:
@@ -108,16 +113,24 @@ databaseChangeLog:
                     nullable: false
         - sql:
             sql: create index idx_user_education_university_id on read.user_education using btree (university_id)
-
+        - sql:
+            sql: create index idx_user_education_user_id on read.user_education using btree (user_id)
+        - sql:
+            sql: create index idx_user_education_status on read.user_education using gin (status)
         - createTable:
             tableName: education_verification
             schemaName: read
             columns:
               - column:
-                  name: user_education_id
+                  name: id
                   type: uuid
                   constraints:
                     primaryKey: true
+              - column:
+                  name: user_education_id
+                  type: uuid
+                  constraints:
+                    nullable: false
               - column:
                   name: user_id
                   type: uuid
@@ -139,11 +152,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: reject_by
+                  name: action_type
+                  type: varchar(30)
+              - column:
+                  name: action_by
                   type: uuid
               - column:
-                  name: confirm_by
-                  type: uuid
+                  name: action_at
+                  type: timestamp
               - column:
                   name: created
                   type: timestamp
@@ -194,6 +210,8 @@ databaseChangeLog:
         - sql:
             sql: create index idx_user_education_verification_university_id on read.user_education_verification using btree (university_id)
         - sql:
+            sql: create index idx_user_education_verification_user_education_id on read.user_education_verification using btree (user_education_id)
+        - sql:
             sql: create index idx_user_education_verification_degree_tsv on read.user_education_verification using gin (degree_tsv)
         - sql:
             sql: create index idx_user_education_verification_university_name_tsv on read.user_education_verification using gin (university_name_tsv)
@@ -207,10 +225,15 @@ databaseChangeLog:
             schemaName: read
             columns:
               - column:
-                  name: user_job_position_id
+                  name: id
                   type: uuid
                   constraints:
                     primaryKey: true
+              - column:
+                  name: user_job_position_id
+                  type: uuid
+                  constraints:
+                    nullable: false
               - column:
                   name: user_id
                   type: uuid
@@ -232,11 +255,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: reject_by
+                  name: action_type
+                  type: varchar(30)
+              - column:
+                  name: action_by
                   type: uuid
               - column:
-                  name: confirm_by
-                  type: uuid
+                  name: action_at
+                  type: timestamp
               - column:
                   name: created
                   type: timestamp
@@ -281,6 +307,8 @@ databaseChangeLog:
                   type: jsonb
                   constraints:
                     nullable: false
+        - sql:
+            sql: create index idx_work_experience_verification_user_job_position_id on read.work_experience_verification using btree (user_job_position_id)
         - sql:
             sql: create index idx_work_experience_verification_user_full_name_tsv on read.work_experience_verification using gin (user_full_name_tsv)
         - sql:
