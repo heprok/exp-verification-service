@@ -29,7 +29,7 @@ class VerificationEventHandler(
 }
 
 @EventHandler("VerificationSyncEvent", "1.0")
-class UserJobPositionSyncEventHandler(
+class VerificationSyncEventHandler(
     private val educationVerificationHandlerService: EducationVerificationHandlerService,
     private val workExperienceVerificationHandlerService: WorkExperienceVerificationHandlerService,
     syncService: SyncService,

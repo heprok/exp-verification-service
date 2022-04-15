@@ -2,7 +2,7 @@ package com.briolink.verificationservice.updater.handler.verification.workexperi
 
 import com.briolink.verificationservice.common.domain.v1_0.ObjectConfirmType
 import com.briolink.verificationservice.common.domain.v1_0.Verification
-import com.briolink.verificationservice.common.enumeration.ActionTypeEnum
+import com.briolink.verificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.verificationservice.common.jpa.read.entity.verification.WorkExperienceVerificationReadEntity
 import com.briolink.verificationservice.common.jpa.read.repository.WorkExperienceVerificationReadRepository
 import com.briolink.verificationservice.updater.handler.user.UserHandlerService
@@ -32,7 +32,7 @@ class WorkExperienceVerificationHandlerService(
             userToConfirmIds = domain.userToConfirmIds.toArray(arrayOfNulls<UUID>(domain.userToConfirmIds.size))
             actionAt = domain.actionAt
             actionBy = domain.actionBy
-            actionType = domain.actionType?.let { ActionTypeEnum.fromInt(it.value) }
+            status = domain.status.let { VerificationStatusEnum.ofValue(it.value) }
             created = domain.created
             changed = domain.changed
             userData = user.data

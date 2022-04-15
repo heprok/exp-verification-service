@@ -316,3 +316,32 @@ databaseChangeLog:
             sql: create index idx_work_experience_verification_company_id on read.work_experience_verification using btree (company_id)
         - sql:
             sql: create index idx_work_experience_verification_status on read.work_experience_verification using hash (status pg_catalog.int2_ops)
+        - createTable:
+            tableName: sync_log
+            schemaName: read
+            columns:
+              - column:
+                  name: sync_id
+                  type: int
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: object_sync
+                  type: int
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: service
+                  type: int
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: completed
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: with_error
+                  type: boolean
+                  constraints:
+                    nullable: true

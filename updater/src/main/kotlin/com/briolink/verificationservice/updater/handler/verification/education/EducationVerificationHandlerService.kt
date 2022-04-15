@@ -2,10 +2,9 @@ package com.briolink.verificationservice.updater.handler.verification.education
 
 import com.briolink.verificationservice.common.domain.v1_0.ObjectConfirmType
 import com.briolink.verificationservice.common.domain.v1_0.Verification
-import com.briolink.verificationservice.common.enumeration.ActionTypeEnum
+import com.briolink.verificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.verificationservice.common.jpa.read.entity.verification.EducationVerificationReadEntity
 import com.briolink.verificationservice.common.jpa.read.repository.EducationVerificationReadRepository
-import com.briolink.verificationservice.updater.handler.university.UniversityHandlerService
 import com.briolink.verificationservice.updater.handler.user.UserHandlerService
 import com.briolink.verificationservice.updater.handler.usereducation.UserEducationHandlerService
 import org.springframework.stereotype.Service
@@ -16,7 +15,6 @@ import javax.transaction.Transactional
 @Transactional
 class EducationVerificationHandlerService(
     private val educationHandlerService: UserEducationHandlerService,
-    private val universityHandlerService: UniversityHandlerService,
     private val userHandlerService: UserHandlerService,
     private val educationVerificationReadRepository: EducationVerificationReadRepository,
 ) {
@@ -33,7 +31,7 @@ class EducationVerificationHandlerService(
             userToConfirmIds = domain.userToConfirmIds.toArray(arrayOfNulls<UUID>(domain.userToConfirmIds.size))
             actionAt = domain.actionAt
             actionBy = domain.actionBy
-            actionType = domain.actionType?.let { ActionTypeEnum.fromInt(it.value) }
+            status = domain.status.let { VerificationStatusEnum.ofValue(it.value) }
             created = domain.created
             changed = domain.changed
             userData = user.data
