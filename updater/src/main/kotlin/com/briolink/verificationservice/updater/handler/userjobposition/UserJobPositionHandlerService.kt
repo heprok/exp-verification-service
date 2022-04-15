@@ -19,9 +19,10 @@ class UserJobPositionHandlerService(
         userJobPositionReadRepository.findById(domain.id).orElse(
             UserJobPositionReadEntity(domain.id).apply {
                 companyId = domain.companyId
+                userId = domain.userId
                 data = UserJobPositionReadEntity.UserJobPositionData(
                     id = domain.id,
-                    company = companyHandlerService.getCompanyData(id),
+                    company = companyHandlerService.getCompanyData(domain.companyId),
                     title = "", startDate = domain.startDate!!, endDate = null
                 )
             }

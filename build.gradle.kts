@@ -125,8 +125,6 @@ subprojects {
 
     dependencies {
         implementation("com.briolink.lib:event:${Versions.Briolink.EVENT}")
-        implementation("com.briolink.lib:permission:${Versions.Briolink.PERMISSION}")
-        implementation("com.briolink.lib:location:${Versions.Briolink.LOCATION}")
         implementation("com.briolink.lib:sync:${Versions.Briolink.SYNC}")
         implementation("me.paulschwarz:spring-dotenv:${Versions.Spring.DOTENV}")
     }

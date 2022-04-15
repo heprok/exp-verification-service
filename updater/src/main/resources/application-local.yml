@@ -1,14 +1,6 @@
 spring:
   jpa:
     show-sql: true
-permission-service:
-  api:
-    url: http://192.168.0.60:8200
-    version: 1
-location-service:
-  api:
-    url: http://192.168.0.60:8070
-    version: 1
 sync-service:
   api:
     url: http://192.168.0.60:8400

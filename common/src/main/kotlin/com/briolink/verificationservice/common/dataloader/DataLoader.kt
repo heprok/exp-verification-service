@@ -1,4 +1,4 @@
-package com.briolink.verificationservice.api.dataloader
+package com.briolink.verificationservice.common.dataloader
 
 import org.joda.time.DateTime
 import org.springframework.boot.CommandLineRunner

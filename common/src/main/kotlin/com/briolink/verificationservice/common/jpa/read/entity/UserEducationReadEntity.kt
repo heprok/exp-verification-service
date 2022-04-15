@@ -34,7 +34,7 @@ class UserEducationReadEntity(
         @JsonProperty
         val id: UUID,
         @JsonProperty
-        val university: UniversityReadEntity.UniversityData,
+        var university: UniversityReadEntity.UniversityData,
         @JsonProperty
         var degree: String,
         @JsonProperty

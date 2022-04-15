@@ -38,10 +38,6 @@ dependencies {
     // IBM ICU4J
     implementation("com.ibm.icu:icu4j:${Versions.IBM_ICU4J}")
 
-    // MapStruct
-    implementation("org.mapstruct:mapstruct:${Versions.MAPSTRUCT}")
-    kapt("org.mapstruct:mapstruct-processor:${Versions.MAPSTRUCT}")
-
     // Blazebit Persistence
     api("com.blazebit:blaze-persistence-integration-spring-data-2.4:${Versions.BLAZE_PERSISTENCE}")
     api("com.blazebit:blaze-persistence-integration-hibernate-5.6:${Versions.BLAZE_PERSISTENCE}")

@@ -4,6 +4,7 @@ import com.briolink.lib.event.Event
 import com.briolink.lib.sync.SyncData
 import com.briolink.lib.sync.SyncEvent
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.net.URL
 import java.util.UUID
 
 data class UniversityEventData(
@@ -12,7 +13,7 @@ data class UniversityEventData(
     @JsonProperty("name")
     val name: String,
     @JsonProperty("logo")
-    val logo: String? = null
+    val logo: URL? = null
 )
 
 data class UniversityCreatedEvent(override val data: UniversityEventData) : Event<UniversityEventData>("1.0")

@@ -40,18 +40,11 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: https://auth.${env.spring_profiles_active}.briolink.com/realms/briolink/protocol/openid-connect/certs
-cloud:
-  aws:
-    stack:
-      auto: false
 dgs:
   graphql:
     path: /
     introspection:
       enabled: false
-app:
-  app-endpoints:
-    user: http://user-service.${env.spring_profiles_active}.svc.cluster.local:8080/
 event:
   publisher:
     sns-name: bl-network-${env.spring_profiles_active}.fifo

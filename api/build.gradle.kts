@@ -50,32 +50,6 @@ dependencies {
 
     // kotlin-logging
     implementation("io.github.microutils:kotlin-logging-jvm:${Versions.KOTLIN_LOGGING_JVM}")
-
-    // MapStruct
-    implementation("org.mapstruct:mapstruct:${Versions.MAPSTRUCT}")
-    kapt("org.mapstruct:mapstruct-processor:${Versions.MAPSTRUCT}")
-
-    // JWT
-    implementation("com.auth0:java-jwt:${Versions.AUTH0_JWT}")
-
-    // Spreadsheet
-    implementation("org.dhatim:fastexcel-reader:${Versions.FASTEXCEL}")
-    implementation("de.siegmar:fastcsv:${Versions.FASTCSV}")
-
-    // Keycloak client
-    implementation("org.keycloak:keycloak-admin-client:${Versions.KEYCLOAK_ADMIN_CLIENT}")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom("io.awspring.cloud:spring-cloud-aws-dependencies:${Versions.Spring.CLOUD_AWS}")
-    }
-}
-
-kapt {
-    arguments {
-        arg("mapstruct.verbose", "true")
-    }
 }
 
 java.sourceSets["main"].java {

@@ -32,8 +32,6 @@ data class UserJobPositionEventData(
     @JsonProperty
     val endDate: LocalDate? = null,
     @JsonProperty
-    val status: JobPositionStatus,
-    @JsonProperty
     val companyId: UUID,
     @JsonProperty
     val userId: UUID,

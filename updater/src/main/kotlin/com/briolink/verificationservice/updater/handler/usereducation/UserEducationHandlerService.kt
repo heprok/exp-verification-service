@@ -19,15 +19,19 @@ class UserEducationHandlerService(
         userEducationReadRepository.findById(domain.id).orElse(
             UserEducationReadEntity(domain.id).apply {
                 userId = domain.userId
+                universityId = domain.universityId
                 data = UserEducationReadEntity.UserEducationData(
                     id = domain.id,
-                    university = universityHandlerService.getUniversityData(id),
+                    university = universityHandlerService.getUniversityData(domain.universityId),
                     degree = "",
                     startDate = domain.startDate,
                     endDate = null
                 )
             }
         ).apply {
+            if (data.university.id != domain.universityId)
+                data.university = universityHandlerService.getUniversityData(domain.universityId)
+
             userId = domain.userId
             data.degree = domain.degree
             data.startDate = domain.startDate

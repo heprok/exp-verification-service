@@ -30,8 +30,6 @@ data class UserEducationEventData(
     @JsonProperty
     val startDate: LocalDate,
     @JsonProperty
-    val status: EducationStatus,
-    @JsonProperty
     val endDate: LocalDate? = null,
     @JsonProperty
     val degree: String,

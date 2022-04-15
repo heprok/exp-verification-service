@@ -4,7 +4,6 @@ import com.briolink.verificationservice.common.jpa.read.entity.UniversityReadEnt
 import com.briolink.verificationservice.common.jpa.read.repository.UniversityReadRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.net.URL
 import java.util.UUID
 import javax.persistence.EntityNotFoundException
 
@@ -18,7 +17,7 @@ class UniversityHandlerService(
             data = UniversityReadEntity.UniversityData(
                 id = domain.id,
                 name = domain.name,
-                logo = domain.logo?.let { URL(it) },
+                logo = domain.logo,
             )
             return universityReadRepository.save(this)
         }
