@@ -55,11 +55,6 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: status
-                  type: smallint
-                  constraints:
-                    nullable: false
-              - column:
                   name: company_id
                   type: uuid
                   constraints:
@@ -78,9 +73,8 @@ databaseChangeLog:
         - sql:
             sql: create index idx_user_job_position_company_id on read.user_job_position using btree (company_id)
         - sql:
-            sql: create index idx_user_job_position_company_id on read.user_job_position using btree (user_id)
-        - sql:
-            sql: create index idx_user_job_position_status on read.user_job_position using gin (status)
+            sql: create index idx_user_job_position_user_id on read.user_job_position using btree (user_id)
+
 
         - createTable:
             tableName: user_education
@@ -110,8 +104,7 @@ databaseChangeLog:
             sql: create index idx_user_education_university_id on read.user_education using btree (university_id)
         - sql:
             sql: create index idx_user_education_user_id on read.user_education using btree (user_id)
-        - sql:
-            sql: create index idx_user_education_status on read.user_education using gin (status)
+
         - createTable:
             tableName: education_verification
             schemaName: read
@@ -201,21 +194,22 @@ databaseChangeLog:
                   type: jsonb
                   constraints:
                     nullable: false
-
         - sql:
-            sql: create index idx_user_educaiton_verification_user_id on read.user_education_verification using btree (user_id)
+            sql: create index idx_user_educaiton_verification_user_id on read.education_verification using btree (user_id)
         - sql:
-            sql: create index idx_user_education_verification_university_id on read.user_education_verification using btree (university_id)
+            sql: create index idx_education_verification_university_id on read.education_verification using btree (university_id)
         - sql:
-            sql: create index idx_user_education_verification_user_education_id on read.user_education_verification using btree (user_education_id)
+            sql: create index idx_education_verification_user_education_id on read.education_verification using btree (user_education_id)
         - sql:
-            sql: create index idx_user_education_verification_degree_tsv on read.user_education_verification using gin (degree_tsv)
+            sql: create index idx_education_verification_degree_tsv on read.education_verification using gin (degree_tsv)
         - sql:
-            sql: create index idx_user_education_verification_university_name_tsv on read.user_education_verification using gin (university_name_tsv)
+            sql: create index idx_education_verification_university_name_tsv on read.education_verification using gin (university_name_tsv)
         - sql:
-            sql: create index idx_user_education_verification_user_full_name_tsv on read.user_education_verification using gin (user_full_name_tsv)
+            sql: create index idx_education_verification_user_full_name_tsv on read.education_verification using gin (user_full_name_tsv)
         - sql:
-            sql: create index idx_user_education_verification_user_to_confirm_ids on read.user_education_verification using gin (user_to_confirm_ids, pg_catalog.array_ops)
+            sql: create index idx_education_verification_user_to_confirm_ids on read.education_verification using gin (user_to_confirm_ids pg_catalog.array_ops)
+        - sql:
+            sql: create index idx_education_verification_status on read.education_verification using hash (status pg_catalog.int2_ops)
 
         - createTable:
             tableName: work_experience_verification
@@ -311,7 +305,7 @@ databaseChangeLog:
         - sql:
             sql: create index idx_work_experience_verification_user_full_name_tsv on read.work_experience_verification using gin (user_full_name_tsv)
         - sql:
-            sql: create index idx_work_experience_verification_user_to_confirm_ids on read.work_experience_verification using gin (user_to_confirm_ids, pg_catalog.array_ops)
+            sql: create index idx_work_experience_verification_user_to_confirm_ids on read.work_experience_verification using gin (user_to_confirm_ids pg_catalog.array_ops)
         - sql:
             sql: create index idx_work_experience_verification_company_name_tsv on read.work_experience_verification using gin (company_name_tsv)
         - sql:
@@ -320,3 +314,5 @@ databaseChangeLog:
             sql: create index idx_work_experience_verification_user_id on read.work_experience_verification using btree (user_id)
         - sql:
             sql: create index idx_work_experience_verification_company_id on read.work_experience_verification using btree (company_id)
+        - sql:
+            sql: create index idx_work_experience_verification_status on read.work_experience_verification using hash (status pg_catalog.int2_ops)

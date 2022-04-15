@@ -59,13 +59,13 @@ databaseChangeLog:
                     nullable: false
                     unique: true
         - sql:
-            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (1, 'Not confirmed')
+            sql: INSERT INTO write.verification_status (id, name) VALUES (1, 'Not confirmed')
         - sql:
-            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (2, 'Pending')
+            sql: INSERT INTO write.verification_status (id, name) VALUES (2, 'Pending')
         - sql:
-            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (3, 'Verified')
+            sql: INSERT INTO write.verification_status (id, name) VALUES (3, 'Verified')
         - sql:
-            sql: INSERT INTO write.object_confirm_type (id, name) VALUES (4, 'Rejected')
+            sql: INSERT INTO write.verification_status (id, name) VALUES (4, 'Rejected')
         - createTable:
             tableName: verification
             schemaName: write
@@ -75,6 +75,11 @@ databaseChangeLog:
                   type: uuid
                   constraints:
                     primaryKey: true
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
               - column:
                   name: object_confirm_id
                   type: uuid
@@ -121,4 +126,4 @@ databaseChangeLog:
         - sql:
             sql: create index idx_verification_object_confirm_id on write.verification using btree(object_confirm_id)
         - sql:
-            sql: create index idx_verification_user_to_confirm_ids on write.verification using gin (user_to_confirm_ids, pg_catalog.array_ops)
+            sql: create index idx_verification_user_to_confirm_ids on write.verification using gin (user_to_confirm_ids pg_catalog.array_ops)

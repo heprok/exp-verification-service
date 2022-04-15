@@ -22,7 +22,6 @@ abstract class VerificationService() {
     protected abstract val eventPublisher: EventPublisher
     protected abstract val verificationWriteRepository: VerificationWriteRepository
     abstract val objectTypeVerification: ObjectConfirmTypeEnum
-    abstract fun checkExistNotConfirmedObjectIdAndUserId(objectId: UUID, userId: UUID): Boolean
 
     private fun confirmTypeReference(): ObjectConfirmTypeWriteEntity =
         entityManager.getReference(ObjectConfirmTypeWriteEntity::class.java, objectTypeVerification.value)
@@ -60,11 +59,19 @@ abstract class VerificationService() {
         }
     }
 
+    private fun checkObjectIdWithUserIdNotConfirmed(objectId: UUID, userId: UUID): Boolean =
+        verificationWriteRepository.existsByUserIdAndObjectConfirmIdAndObjectConfirmTypeIdAndStatusId(
+            userId = userId,
+            objectConfirmId = objectId,
+            typeId = objectTypeVerification.value,
+            statusId = VerificationStatusEnum.NotConfirmed.value
+        )
+
     fun addVerification(userId: UUID, objectId: UUID, userConfirmIds: List<UUID>): VerificationWriteEntity {
 
         if (userConfirmIds.contains(userId)) throw UserErrorGraphQlException("User can't confirm himself")
 
-        if (!checkExistNotConfirmedObjectIdAndUserId(objectId, userId))
+        if (!checkObjectIdWithUserIdNotConfirmed(objectId, userId))
             throw UserErrorGraphQlException("${objectTypeVerification.name} $objectId and user $userId not found")
 
         return VerificationWriteEntity().apply {

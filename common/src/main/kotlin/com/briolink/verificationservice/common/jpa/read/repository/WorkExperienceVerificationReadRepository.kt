@@ -12,16 +12,16 @@ interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienc
     @Modifying
     @Query(
         """update WorkExperienceVerificationReadEntity u
-           set 
-               u.userFullName = :fullName, 
+           set
+               u.userFullName = :fullName,
                u.userFullNameTsv = function('tsv', u.userFullName),
                u.userData = function('jsonb_sets', u.userData,
-                    '{id}', :id, uuid,
+                    '{id}', :userId, uuid,
                     '{slug}', :slug, text,
                     '{firstName}', :firstName, text,
                     '{lastName}', :lastName, text,
                     '{image}', :image, text
-               ) 
+               )
            where u.userId = :userId
         """,
     )
@@ -37,15 +37,15 @@ interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienc
     @Modifying
     @Query(
         """update WorkExperienceVerificationReadEntity u
-           set 
+           set
                u.companyName = :name,
                u.companyNameTsv = function('tsv', u.companyName),
                u.userJobPositionData = function('jsonb_sets', u.userJobPositionData,
-                    '{company,id}', :id, uuid,
+                    '{company,id}', :companyId, uuid,
                     '{company,slug}', :slug, text,
                     '{company,name}', :firstName, text,
                     '{company,logo}', :logo, text
-               ) 
+               )
            where u.companyId = :companyId
         """,
     )
@@ -59,15 +59,15 @@ interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienc
     @Modifying
     @Query(
         """update WorkExperienceVerificationReadEntity u
-           set 
+           set
                u.jobPositionTitle = :title,
                u.jobPositionTitleTsv = function('tsv', u.jobPositionTitle),
                u.userJobPositionData = function('jsonb_sets', u.userJobPositionData,
-                    '{id}', :id, uuid,
+                    '{id}', :userJobPositionId, uuid,
                     '{title}', :title, text,
                     '{startDate}', :startDate, date,
                     '{endDate}', :endDate, date
-               ) 
+               )
            where u.userJobPositionId = :userJobPositionId
         """,
     )

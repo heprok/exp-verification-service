@@ -27,74 +27,29 @@ class UserDataLoader(
     )
 
     override fun loadData() {
-        if (userReadRepository.count().toInt() == 0 &&
-            companyReadRepository.count().toInt() != 0
+        if (userReadRepository.count().toInt() == 0
         ) {
             val companies = companyReadRepository.findAll()
-            var randomCompany = companies.random()
             userService.createReadUser(
-                UserReadEntity().apply {
-                    id = UUID.fromString("a7bfe294-2586-452b-b5fc-77700df058d3")
-                    name = listFirstName.random()
-                    currentJobPositionCompanyId = randomCompany.id
-                    personalEmail = UUID.randomUUID().toString()
-                    data = UserReadEntity.Data(
+                UserReadEntity(id = UUID.fromString("a7bfe294-2586-452b-b5fc-77700df058d3")).apply {
+                    data = UserReadEntity.UserData(
                         id = UUID.randomUUID(),
                         slug = UUID.randomUUID().toString(),
                         firstName = listFirstName.random(),
-                        currentJobPosition = UserReadEntity.CurrentJobPosition(
-                            id = UUID.randomUUID(),
-                            title = "Job position",
-                            company = UserReadEntity.Company(
-                                id = randomCompany.id!!,
-                                slug = randomCompany.data.slug,
-                                name = randomCompany.data.name,
-                                industryId = randomCompany.data.industryId,
-                                industryName = randomCompany.data.industryName,
-                                marketSegmentId = randomCompany.data.marketSegmentId,
-                                marketSegmentName = randomCompany.data.marketSegmentName,
-                            )
-                        ),
                         lastName = listLastName.random(),
                         image = if (Random.nextBoolean()) URL("https://placeimg.com/148/148/people") else null,
-                        description = null,
-                        location = null,
-                        verifiedProjects = 0,
-                        verifiedConnections = 0,
                     )
                 },
             )
             for (i in 1..COUNT_USER) {
-                randomCompany = companies.random()
                 userService.createReadUser(
-                    UserReadEntity().apply {
-                        id = UUID.randomUUID()
-                        name = listFirstName.random()
-                        currentJobPositionCompanyId = companies.random().id!!
-                        personalEmail = UUID.randomUUID().toString()
-                        data = UserReadEntity.Data(
+                    UserReadEntity(id = UUID.randomUUID()).apply {
+                        data = UserReadEntity.UserData(
                             id = UUID.randomUUID(),
-                            currentJobPosition = UserReadEntity.CurrentJobPosition(
-                                id = UUID.randomUUID(),
-                                title = "Job position",
-                                company = UserReadEntity.Company(
-                                    id = randomCompany.id!!,
-                                    slug = randomCompany.data.slug,
-                                    name = randomCompany.data.name,
-                                    industryId = randomCompany.data.industryId,
-                                    industryName = randomCompany.data.industryName,
-                                    marketSegmentId = randomCompany.data.marketSegmentId,
-                                    marketSegmentName = randomCompany.data.marketSegmentName,
-                                )
-                            ),
                             slug = UUID.randomUUID().toString(),
                             firstName = listFirstName.random(),
                             lastName = listLastName.random(),
                             image = if (Random.nextBoolean()) URL("https://placeimg.com/148/148/people") else null,
-                            description = null,
-                            location = null,
-                            verifiedProjects = 0,
-                            verifiedConnections = 0,
                         )
                     },
                 )

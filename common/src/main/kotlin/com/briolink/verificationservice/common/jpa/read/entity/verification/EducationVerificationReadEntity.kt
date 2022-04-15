@@ -14,7 +14,7 @@ import javax.persistence.Table
 @Table(name = "education_verification", schema = "read")
 class EducationVerificationReadEntity() : BaseVerificationReadEntity() {
 
-    @Type(type = "uuid-uuid")
+    @Type(type = "pg-uuid")
     @Column(name = "user_education_id")
     lateinit var userEducationId: UUID
 
@@ -45,6 +45,7 @@ class EducationVerificationReadEntity() : BaseVerificationReadEntity() {
     fun tsvUpdate() {
         universityNameTsv = universityName
         degreeTsv = degree
+        userFullNameTsv = userFullName
     }
 }
 

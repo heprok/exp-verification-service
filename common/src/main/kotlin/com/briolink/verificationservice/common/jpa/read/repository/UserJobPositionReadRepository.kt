@@ -9,19 +9,16 @@ import java.util.UUID
 
 interface UserJobPositionReadRepository : JpaRepository<UserJobPositionReadEntity, UUID> {
 
-    @Query("select (count(u) > 0) from UserJobPositionReadEntity u where u.id = ?1 and u.userId = ?2 and u._status = ?3")
-    fun existsByIdAndUserIdAndStatus(id: UUID, userId: UUID, status: Int): Boolean
-
     @Modifying
     @Query(
         """update UserJobPositionReadEntity u
-           set 
+           set
                u.data = function('jsonb_sets', u.data,
-                    '{company,id}', :id, uuid,
+                    '{company,id}', :companyId, uuid,
                     '{company,slug}', :slug, text,
-                    '{company,name}', :firstName, text,
+                    '{company,name}', :name, text,
                     '{company,logo}', :logo, text
-               ) 
+               )
            where u.companyId = :companyId
         """,
     )

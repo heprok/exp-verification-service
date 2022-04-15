@@ -34,7 +34,7 @@ spring:
     show-sql: false
     open-in-view: false
   liquibase:
-    change-log: migration/master.xml
+    change-log: db/changelog.xml
   security:
     oauth2:
       resourceserver:

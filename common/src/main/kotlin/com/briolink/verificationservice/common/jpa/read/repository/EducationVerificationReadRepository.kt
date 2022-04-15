@@ -12,16 +12,16 @@ interface EducationVerificationReadRepository : JpaRepository<EducationVerificat
     @Modifying
     @Query(
         """update EducationVerificationReadEntity u
-           set 
-               u.userFullName = :fullName, 
+           set
+               u.userFullName = :fullName,
                u.userFullNameTsv = function('tsv', u.userFullName),
                u.userData = function('jsonb_sets', u.userData,
-                    '{id}', :id, uuid,
+                    '{id}', :userId, uuid,
                     '{slug}', :slug, text,
                     '{firstName}', :firstName, text,
                     '{lastName}', :lastName, text,
                     '{image}', :image, text
-               ) 
+               )
            where u.userId = :userId
         """,
     )
@@ -37,14 +37,14 @@ interface EducationVerificationReadRepository : JpaRepository<EducationVerificat
     @Modifying
     @Query(
         """update EducationVerificationReadEntity u
-           set 
+           set
                u.universityName = :name,
                u.universityNameTsv = function('tsv', u.universityName),
                u.userEducationData = function('jsonb_sets', u.userEducationData,
-                    '{university,id}', :id, uuid,
-                    '{university,slug}', :slug, text,
-                    '{university,name}', :firstName, text
-               ) 
+                    '{university,id}', :universityId, uuid,
+                    '{university,logo}', :logo, text,
+                    '{university,name}', :name, text
+               )
            where u.universityId = :universityId
         """,
     )
@@ -57,7 +57,7 @@ interface EducationVerificationReadRepository : JpaRepository<EducationVerificat
     @Modifying
     @Query(
         """update EducationVerificationReadEntity u
-           set 
+           set
                u.degree = :title,
                u.degreeTsv = function('tsv', u.degree),
                u.userEducationData = function('jsonb_sets', u.userEducationData,
@@ -65,7 +65,7 @@ interface EducationVerificationReadRepository : JpaRepository<EducationVerificat
                     '{degree}', :degree, text,
                     '{startDate}', :startDate, date,
                     '{endDate}', :endDate, date
-               ) 
+               )
            where u.userEducationId = :userEducationId
         """,
     )
