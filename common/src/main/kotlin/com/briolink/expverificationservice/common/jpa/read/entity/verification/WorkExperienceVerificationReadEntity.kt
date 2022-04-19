@@ -48,10 +48,3 @@ class WorkExperienceVerificationReadEntity() : BaseVerificationReadEntity() {
         userFullNameTsv = userFullName
     }
 }
-
-// @Embeddable
-// class WorkExperienceVerificationReadEntityId(
-//     objectId: ObjectConfirmId,
-//     @Column(name = "user_job_position_id", nullable = false, length = 36)
-//     override var objectConfirmId: UUID
-// ) : VerificationReadEntityId(objectId)

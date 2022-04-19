@@ -9,8 +9,6 @@ import com.briolink.expverificationservice.api.service.verifcation.education.dto
 import com.briolink.expverificationservice.api.service.verifcation.workexperince.WorkExperienceVerificationListService
 import com.briolink.expverificationservice.api.service.verifcation.workexperince.dto.WorkExpVerificationListFilter
 import com.briolink.expverificationservice.api.service.verifcation.workexperince.dto.WorkExpVerificationListRequest
-import com.briolink.expverificationservice.api.types.Suggestion
-import com.briolink.expverificationservice.api.types.SuggestionOptions
 import com.briolink.expverificationservice.api.types.Verification
 import com.briolink.expverificationservice.api.types.VerificationList
 import com.briolink.expverificationservice.api.types.VerificationListOptions
@@ -24,24 +22,19 @@ import java.util.UUID
 @DgsComponent
 class VerificationQuery(
     private val educationVerificationListService: EducationVerificationListService,
-    private val workExperienceVerificationListService: WorkExperienceVerificationListService
+    private val workExperienceVerificationListService: WorkExperienceVerificationListService,
 ) {
-    @DgsQuery
-    @PreAuthorize("isAuthenticated()")
-    fun getSuggestions(
-        @InputArgument options: SuggestionOptions
-    ): List<Suggestion> {
-        return listOf()
-    }
-
     @DgsQuery
     @PreAuthorize("isAuthenticated()")
     fun getVerificationList(
         @InputArgument options: VerificationListOptions
     ): VerificationList {
-        return when (TabVerificationEnum.fromId(options.tabId)) {
+        return when (TabVerificationEnum.getByIdOrNull(options.tabId)) {
             TabVerificationEnum.WorkExperience -> getWorkExpVerificationList(options)
             TabVerificationEnum.Education -> getEducationVerificationList(options)
+            else -> VerificationList(
+                items = listOf(), itemsCountByTab = listOf(), totalItems = 0
+            )
         }
     }
 

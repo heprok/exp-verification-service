@@ -22,8 +22,8 @@ abstract class DataLoader : CommandLineRunner {
         const val COUNT_COMPANY = 5
         const val COUNT_USER = 5
         const val COUNT_USER_EDUCATION = 700
-        const val COUNT_EDUCATION_VERIFICATION = 5
-        const val COUNT_WORKEXP_VERIFICATION = 5
+        const val COUNT_EDUCATION_VERIFICATION = 20
+        const val COUNT_WORKEXP_VERIFICATION = 20
     }
 
     fun randomDate(startYear: Int, endYear: Int): LocalDate {

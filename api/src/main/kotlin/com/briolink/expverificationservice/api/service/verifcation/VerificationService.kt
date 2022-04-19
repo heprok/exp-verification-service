@@ -39,11 +39,11 @@ abstract class VerificationService() {
         entityManager.getReference(VerificationStatusWriteEntity::class.java, status.value)
 
     private fun publishCreatedEvent(entity: VerificationWriteEntity) {
-        eventPublisher.publishAsync(VerificationCreatedEvent(entity.toDomain()))
+        eventPublisher.publish(VerificationCreatedEvent(entity.toDomain()))
     }
 
     private fun publishUpdatedEvent(entity: VerificationWriteEntity) {
-        eventPublisher.publishAsync(VerificationUpdatedEvent(entity.toDomain()))
+        eventPublisher.publish(VerificationUpdatedEvent(entity.toDomain()))
     }
 
     private fun getById(id: UUID): VerificationWriteEntity =
@@ -75,14 +75,14 @@ abstract class VerificationService() {
         if (userConfirmIds.contains(userId)) throw UserErrorGraphQlException("User can't confirm himself")
 
         if (!existObjectIdAndUserIdAndStatus(objectId, userId, VerificationStatusEnum.NotConfirmed))
-            throw UserErrorGraphQlException("${objectTypeVerification.name} $objectId and user $userId not found")
+            throw UserErrorGraphQlException("Not confirmed ${objectTypeVerification.name} $objectId and user $userId not found")
 
         val verification = VerificationWriteEntity().apply {
             this.userId = userId
             this.objectConfirmId = objectId
             this.objectConfirmType = confirmTypeReference()
             this.userToConfirmIds = userConfirmIds.toTypedArray()
-            this.status = statusReference(VerificationStatusEnum.NotConfirmed)
+            this.status = statusReference(VerificationStatusEnum.Pending)
         }.let {
             verificationWriteRepository.save(it)
         }.also {

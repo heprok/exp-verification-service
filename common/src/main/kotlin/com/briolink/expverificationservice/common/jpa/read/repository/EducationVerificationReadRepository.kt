@@ -1,6 +1,9 @@
 package com.briolink.expverificationservice.common.jpa.read.repository
 
+import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.expverificationservice.common.jpa.read.entity.verification.EducationVerificationReadEntity
+import com.briolink.expverificationservice.common.types.BaseSuggestion
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -75,4 +78,52 @@ interface EducationVerificationReadRepository : JpaRepository<EducationVerificat
         @Param("startDate") startDate: LocalDate,
         @Param("endDate") endDate: LocalDate? = null,
     )
+
+    @Query(
+        """
+            select distinct u.userFullName as name
+            from EducationVerificationReadEntity u
+            where function('array_contains_element', u.userToConfirmIds, :userId) = true AND
+                (:query is null or function('fts_partial_col', u.userFullNameTsv, :query) = true ) AND
+                u._status = :status
+        """,
+    )
+    fun getSuggestionUserFullNameAssociatedUser(
+        @Param("userId") associatedUserId: UUID,
+        @Param("query") query: String? = null,
+        @Param("status") status: Int = VerificationStatusEnum.Pending.value,
+        pageable: Pageable = Pageable.ofSize(10)
+    ): List<BaseSuggestion>
+
+    @Query(
+        """
+            select distinct u.degree as name
+            from EducationVerificationReadEntity u
+            where function('array_contains_element', u.userToConfirmIds, :userId) = true AND
+                (:query is null or function('fts_partial_col', u.degreeTsv, :query) = true ) AND
+                u._status = :status
+        """,
+    )
+    fun getSuggestionDegreeAssociatedUser(
+        @Param("userId") associatedUserId: UUID,
+        @Param("query") query: String? = null,
+        @Param("status") status: Int = VerificationStatusEnum.Pending.value,
+        pageable: Pageable = Pageable.ofSize(10)
+    ): List<BaseSuggestion>
+
+    @Query(
+        """
+            select distinct u.universityId as id, u.universityName as name
+            from EducationVerificationReadEntity u
+            where function('array_contains_element', u.userToConfirmIds, :userId) = true AND
+                (:query is null or function('fts_partial_col', u.universityNameTsv, :query) = true ) AND
+                u._status = :status
+        """,
+    )
+    fun getSuggestionUniversityAssociatedUser(
+        @Param("userId") associatedUserId: UUID,
+        @Param("query") query: String? = null,
+        @Param("status") status: Int = VerificationStatusEnum.Pending.value,
+        pageable: Pageable = Pageable.ofSize(10)
+    ): List<BaseSuggestion>
 }

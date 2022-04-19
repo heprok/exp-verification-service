@@ -48,10 +48,3 @@ class EducationVerificationReadEntity() : BaseVerificationReadEntity() {
         userFullNameTsv = userFullName
     }
 }
-
-// @Embeddable
-// class EducationVerificationReadEntityId(
-//     objectId: ObjectConfirmId,
-//     @Column(name = "user_education_id", nullable = false, length = 36)
-//     override var objectConfirmId: UUID
-// ) : VerificationReadEntityId(objectId)

@@ -44,7 +44,7 @@ abstract class BaseVerificationReadEntity {
     lateinit var userToConfirmIds: Array<UUID>
 
     @Column(name = "status", nullable = false)
-    private var _status: Int = VerificationStatusEnum.NotConfirmed.value
+    private var _status: Int = VerificationStatusEnum.Pending.value
 
     var status: VerificationStatusEnum
         get() = VerificationStatusEnum.ofValue(_status)
