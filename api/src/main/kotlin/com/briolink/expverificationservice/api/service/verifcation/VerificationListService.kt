@@ -4,6 +4,7 @@ import com.blazebit.persistence.CriteriaBuilder
 import com.blazebit.persistence.PagedList
 import com.blazebit.persistence.ParameterHolder
 import com.blazebit.persistence.WhereBuilder
+import com.briolink.expverificationservice.api.service.verifcation.dto.TabVerificationEnum
 import com.briolink.expverificationservice.api.service.verifcation.dto.VerificationCountItem
 
 interface VerificationListRequest {
@@ -12,10 +13,26 @@ interface VerificationListRequest {
 }
 
 abstract class VerificationListService<A : VerificationListRequest, B> {
+    abstract val tab: TabVerificationEnum
 
-    abstract fun getList(request: A): PagedList<B>
+    fun getList(request: A): PagedList<B> {
+        val cb = createCB()
+
+        applyFilters(request, cb)
+
+        return cb.orderByDesc("created").orderByDesc("id").page(request.offset, request.limit).resultList
+    }
+
     abstract fun createCB(): CriteriaBuilder<B>
     abstract fun <T> applyFilters(request: A, cb: T): T where T : WhereBuilder<T>, T : ParameterHolder<T>
 
-    abstract fun getTab(request: A, withCount: Boolean): VerificationCountItem
+    fun getTab(request: A?, withCount: Boolean): VerificationCountItem {
+        val tab = VerificationCountItem(id = tab.id, name = tab.name, count = 0)
+        if (withCount) {
+            val cb = createCB()
+            request?.also { applyFilters(request, cb) }
+            tab.count = cb.queryRootCountQuery.resultList.first().toInt()
+        }
+        return tab
+    }
 }
