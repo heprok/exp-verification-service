@@ -73,7 +73,7 @@
 #  <<: *dev_deploy
 #  environment:
 #    name: dev
-#    url: https://verification-service.dev.briolink.com
+#    url: https://exp-verification-service.dev.briolink.com
 #  only:
 #    - dev
 #
@@ -81,7 +81,7 @@
 #  <<: *dev_deploy
 #  environment:
 #    name: demo
-#    url: https://verification-service.demo.briolink.com
+#    url: https://exp-verification-service.demo.briolink.com
 #  only:
 #    - demo
 #
@@ -89,7 +89,7 @@
 #  <<: *dev_deploy
 #  environment:
 #    name: test
-#    url: https://verification-service.test.briolink.com
+#    url: https://exp-verification-service.test.briolink.com
 #  only:
 #    - test
 #
@@ -97,7 +97,7 @@
 #  <<: *prod_deploy
 #  environment:
 #    name: prod
-#    url: https://verification-service.app.briolink.com
+#    url: https://exp-verification-service.app.briolink.com
 #  only:
 #    - main
 #

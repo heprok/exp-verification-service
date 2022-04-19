@@ -1,2 +1,2 @@
-rootProject.name = "verification-service"
+rootProject.name = "exp-verification-service"
 include(":api", ":common", ":updater")

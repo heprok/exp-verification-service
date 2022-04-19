@@ -57,7 +57,7 @@ java.sourceSets["main"].java {
 }
 
 tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
-    packageName = "com.briolink.verificationservice.api"
+    packageName = "com.briolink.expverificationservice.api"
     language = "kotlin"
     typeMapping = mutableMapOf(
         "Url" to "java.net.URL",

@@ -14,7 +14,7 @@ spring:
       max-file-size: 2MB
       max-request-size: 2MB
   datasource:
-    url: jdbc:postgresql://${env.DB_HOST:localhost}:${env.DB_PORT:5432}/${env.spring_profiles_active}_verification
+    url: jdbc:postgresql://${env.DB_HOST:localhost}:${env.DB_PORT:5432}/${env.spring_profiles_active}_exp_verification
     username: ${env.DB_USER:postgres}
     password: ${env.DB_PASSWORD:postgres}
     hikari:
@@ -29,7 +29,7 @@ spring:
         types:
           print:
             banner: false
-        metadata_builder_contributor: com.briolink.verificationservice.common.jpa.Functions
+        metadata_builder_contributor: com.briolink.expverificationservice.common.jpa.Functions
     generate-ddl: false
     show-sql: false
     open-in-view: false

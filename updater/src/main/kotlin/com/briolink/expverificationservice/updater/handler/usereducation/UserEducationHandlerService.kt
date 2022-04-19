@@ -1,0 +1,50 @@
+package com.briolink.expverificationservice.updater.handler.usereducation
+
+import com.briolink.expverificationservice.common.jpa.read.entity.UserEducationReadEntity
+import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
+import com.briolink.expverificationservice.common.jpa.read.repository.UserEducationReadRepository
+import com.briolink.expverificationservice.updater.handler.university.UniversityHandlerService
+import java.util.UUID
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import javax.persistence.EntityNotFoundException
+
+@Service
+@Transactional
+class UserEducationHandlerService(
+    private val userEducationReadRepository: UserEducationReadRepository,
+    private val universityHandlerService: UniversityHandlerService,
+) {
+    fun createOrUpdate(domain: UserEducationEventData): UserEducationReadEntity {
+        userEducationReadRepository.findById(domain.id).orElse(
+            UserEducationReadEntity(domain.id).apply {
+                userId = domain.userId
+                universityId = domain.universityId
+                data = UserEducationReadEntity.UserEducationData(
+                    id = domain.id,
+                    university = universityHandlerService.getUniversityData(domain.universityId),
+                    degree = "",
+                    startDate = domain.startDate,
+                    endDate = null
+                )
+            }
+        ).apply {
+            if (data.university.id != domain.universityId)
+                data.university = universityHandlerService.getUniversityData(domain.universityId)
+
+            userId = domain.userId
+            data.degree = domain.degree
+            data.startDate = domain.startDate
+            data.endDate = domain.endDate
+            return userEducationReadRepository.save(this)
+        }
+    }
+
+    fun getById(id: UUID): UserEducationReadEntity {
+        return userEducationReadRepository.findById(id).orElseThrow { throw EntityNotFoundException("UserEducation with id $id not found") }
+    }
+
+    fun updateCompany(university: CompanyReadRepository) {
+        TODO("not implemented")
+    }
+}

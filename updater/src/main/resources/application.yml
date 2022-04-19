@@ -4,7 +4,7 @@ spring:
   profiles:
     active: ${env.spring_profiles_active:local}
   datasource:
-    url: jdbc:postgresql://${env.DB_HOST:localhost}:${env.DB_PORT:5432}/${env.spring_profiles_active}_verification
+    url: jdbc:postgresql://${env.DB_HOST:localhost}:${env.DB_PORT:5432}/${env.spring_profiles_active}_exp_verification
     username: ${env.DB_USER:postgres}
     password: ${env.DB_PASSWORD:postgres}
     hikari:
@@ -19,7 +19,7 @@ spring:
         types:
           print:
             banner: false
-        metadata_builder_contributor: com.briolink.verificationservice.common.jpa.Functions
+        metadata_builder_contributor: com.briolink.expverificationservice.common.jpa.Functions
         jdbc:
           batch_size: 60
     generate-ddl: false
@@ -30,7 +30,7 @@ cloud:
       auto: false
 event:
   listener:
-    sqs-name: bl-network-${env.spring_profiles_active}-verification-service.fifo
+    sqs-name: bl-network-${env.spring_profiles_active}-exp-verification-service.fifo
 sync-service:
   api:
     url: http://sync-service.${env.spring_profiles_active}.svc.cluster.local/
