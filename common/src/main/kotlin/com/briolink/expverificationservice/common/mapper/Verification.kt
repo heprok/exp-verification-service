@@ -15,7 +15,7 @@ fun VerificationWriteEntity.toDomain(): Verification {
         objectConfirmType = objectConfirmType.let { ObjectConfirmType.fromInt(it.id!!) },
         userToConfirmIds = ArrayList(userToConfirmIds.toList()),
         actionBy = actionBy,
-        status = status.let { VerificationStatus.valueOf(it.name) },
+        status = status.let { VerificationStatus.fromInt(it.id!!) },
         actionAt = actionAt,
         created = created,
         changed = changed

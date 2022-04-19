@@ -28,4 +28,7 @@ interface UserJobPositionReadRepository : JpaRepository<UserJobPositionReadEntit
         @Param("name") name: String,
         @Param("logo") logo: String? = null,
     )
+
+    @Query("select (count(u) > 0) from UserJobPositionReadEntity u where u.id = ?1 and u.userId = ?2 and u._status = ?3")
+    fun existByIdAndUserAndStatus(id: UUID, userId: UUID, status: Int): Boolean
 }

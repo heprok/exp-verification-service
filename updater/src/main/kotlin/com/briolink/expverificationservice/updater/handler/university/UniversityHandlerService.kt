@@ -2,9 +2,9 @@ package com.briolink.expverificationservice.updater.handler.university
 
 import com.briolink.expverificationservice.common.jpa.read.entity.UniversityReadEntity
 import com.briolink.expverificationservice.common.jpa.read.repository.UniversityReadRepository
-import java.util.UUID
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 import javax.persistence.EntityNotFoundException
 
 @Service

@@ -1,14 +1,15 @@
 package com.briolink.expverificationservice.updater.dataloader
 
 import com.briolink.expverificationservice.common.dataloader.DataLoader
+import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserJobPositionReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
 import com.briolink.expverificationservice.updater.handler.userjobposition.UserJobPositionEventData
 import com.briolink.expverificationservice.updater.handler.userjobposition.UserJobPositionHandlerService
-import java.util.UUID
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
+import java.util.UUID
 import kotlin.random.Random
 
 @Component
@@ -49,13 +50,10 @@ class UserJobPositionDataLoader(
                         endDate = if (Random.nextBoolean()) randomDate(2010, 2016) else null,
                         title = jobPositionTitles.random(),
                         userId = users.random().id
-                    )
+                    ),
+                    VerificationStatus.values().random()
                 )
             }
         }
-    }
-
-    companion object {
-        const val COUNT_USER_JOB_POSITION = 10
     }
 }

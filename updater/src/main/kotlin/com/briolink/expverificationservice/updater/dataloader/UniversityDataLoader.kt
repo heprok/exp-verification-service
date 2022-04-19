@@ -4,10 +4,10 @@ import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.jpa.read.repository.UniversityReadRepository
 import com.briolink.expverificationservice.updater.handler.university.UniversityEventData
 import com.briolink.expverificationservice.updater.handler.university.UniversityHandlerService
-import java.net.URL
-import java.util.UUID
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
+import java.net.URL
+import java.util.UUID
 import kotlin.random.Random
 
 @Component
@@ -35,9 +35,5 @@ class UniversityDataLoader(
                 )
             }
         }
-    }
-
-    companion object {
-        const val COUNT_UNIVERSITY = 5
     }
 }

@@ -25,7 +25,7 @@ class VerificationWriteEntity : BaseWriteEntity() {
     @Column(name = "object_confirm_id", nullable = false)
     lateinit var objectConfirmId: UUID
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "object_confirm_type_id", nullable = false)
     lateinit var objectConfirmType: ObjectConfirmTypeWriteEntity
 
@@ -33,7 +33,7 @@ class VerificationWriteEntity : BaseWriteEntity() {
     @Column(name = "user_to_confirm_ids", columnDefinition = "uuid[]", nullable = false)
     lateinit var userToConfirmIds: Array<UUID>
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "status_id", nullable = false)
     lateinit var status: VerificationStatusWriteEntity
 

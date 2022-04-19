@@ -1,14 +1,15 @@
 package com.briolink.expverificationservice.updater.dataloader
 
 import com.briolink.expverificationservice.common.dataloader.DataLoader
+import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.repository.UniversityReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserEducationReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
 import com.briolink.expverificationservice.updater.handler.usereducation.UserEducationEventData
 import com.briolink.expverificationservice.updater.handler.usereducation.UserEducationHandlerService
-import java.util.UUID
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
+import java.util.UUID
 import kotlin.random.Random
 
 @Component
@@ -45,13 +46,10 @@ class UserEducationDataLoader(
                         endDate = if (Random.nextBoolean()) randomDate(2010, 2016) else null,
                         degree = degreeList.random(),
                         userId = users.random().id
-                    )
+                    ),
+                    VerificationStatus.values().random()
                 )
             }
         }
-    }
-
-    companion object {
-        const val COUNT_USER_EDUCATION = 10
     }
 }

@@ -16,6 +16,16 @@ abstract class DataLoader : CommandLineRunner {
 
     abstract fun loadData()
 
+    companion object {
+        const val COUNT_USER_JOB_POSITION = 700
+        const val COUNT_UNIVERSITY = 5
+        const val COUNT_COMPANY = 5
+        const val COUNT_USER = 5
+        const val COUNT_USER_EDUCATION = 700
+        const val COUNT_EDUCATION_VERIFICATION = 5
+        const val COUNT_WORKEXP_VERIFICATION = 5
+    }
+
     fun randomDate(startYear: Int, endYear: Int): LocalDate {
         val day: Int = Random.nextInt(1, 28)
         val month: Int = Random.nextInt(1, 12)
@@ -27,7 +37,6 @@ abstract class DataLoader : CommandLineRunner {
         val result = mutableListOf<UUID>()
 
         val ids = list.filter { !(excludeIds?.contains(it) ?: false) }
-        println(ids)
         return ids.subList(0, count)
     }
 

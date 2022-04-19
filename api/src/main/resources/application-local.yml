@@ -10,6 +10,11 @@ logging:
 spring:
   jpa:
     show-sql: true
+  datasource:
+    hikari:
+      idle-timeout: 20000
+      minimum-idle: 1
+      maximum-pool-size: 50
   security:
     oauth2:
       resourceserver:

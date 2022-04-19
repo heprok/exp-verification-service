@@ -35,13 +35,13 @@ class EducationVerificationDataLoader(
             val universities = universityReadRepository.findAll()
             val userEducations = userEducationReadRepository.findAll()
 
-            for (i in 1..COUNT_VERIFICATION) {
+            for (i in 1..COUNT_EDUCATION_VERIFICATION) {
                 val randomUser = users.random()
                 val randomUniversity = universities.random()
 
                 val randomUserEducation = userEducations
                     .filter {
-                        it.userId == randomUser.id && it.status == VerificationStatus.Pending &&
+                        it.userId == randomUser.id && it.status == VerificationStatus.NotConfirmed &&
                             it.universityId == randomUniversity.id
                     }
                     .random()
@@ -61,9 +61,5 @@ class EducationVerificationDataLoader(
                 )
             }
         }
-    }
-
-    companion object {
-        const val COUNT_VERIFICATION = 5
     }
 }

@@ -4,10 +4,10 @@ import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.updater.handler.company.CompanyEventData
 import com.briolink.expverificationservice.updater.handler.company.CompanyHandlerService
-import java.net.URL
-import java.util.UUID
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
+import java.net.URL
+import java.util.UUID
 
 @Component
 @Order(1)
@@ -117,8 +117,9 @@ class CompanyDataLoader(
                 )
             )
 
-            companyReadEntityList.forEach {
-                companyHandlerService.createOrUpdate(it)
+            companyReadEntityList.forEachIndexed { index, companyEventData ->
+                if (index == COUNT_COMPANY) return@forEachIndexed
+                companyHandlerService.createOrUpdate(companyEventData)
             }
         }
     }

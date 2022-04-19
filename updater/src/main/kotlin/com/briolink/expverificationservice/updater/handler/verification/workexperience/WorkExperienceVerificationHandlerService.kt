@@ -7,8 +7,8 @@ import com.briolink.expverificationservice.common.jpa.read.entity.verification.W
 import com.briolink.expverificationservice.common.jpa.read.repository.WorkExperienceVerificationReadRepository
 import com.briolink.expverificationservice.updater.handler.user.UserHandlerService
 import com.briolink.expverificationservice.updater.handler.userjobposition.UserJobPositionHandlerService
-import java.util.UUID
 import org.springframework.stereotype.Service
+import java.util.UUID
 import javax.transaction.Transactional
 
 @Service

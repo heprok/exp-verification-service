@@ -4,10 +4,10 @@ import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
 import com.briolink.expverificationservice.updater.handler.user.UserEventData
 import com.briolink.expverificationservice.updater.handler.user.UserHandlerService
-import java.net.URL
-import java.util.UUID
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
+import java.net.URL
+import java.util.UUID
 import kotlin.random.Random
 
 @Component
@@ -49,9 +49,5 @@ class UserDataLoader(
                 )
             }
         }
-    }
-
-    companion object {
-        const val COUNT_USER = 5
     }
 }

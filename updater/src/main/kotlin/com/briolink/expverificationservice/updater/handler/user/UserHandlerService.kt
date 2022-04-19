@@ -2,9 +2,9 @@ package com.briolink.expverificationservice.updater.handler.user
 
 import com.briolink.expverificationservice.common.jpa.read.entity.UserReadEntity
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
-import java.util.UUID
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 import javax.persistence.EntityNotFoundException
 
 @Service

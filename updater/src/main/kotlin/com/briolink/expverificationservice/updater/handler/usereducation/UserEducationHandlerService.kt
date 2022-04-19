@@ -1,12 +1,13 @@
 package com.briolink.expverificationservice.updater.handler.usereducation
 
+import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.entity.UserEducationReadEntity
 import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserEducationReadRepository
 import com.briolink.expverificationservice.updater.handler.university.UniversityHandlerService
-import java.util.UUID
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 import javax.persistence.EntityNotFoundException
 
 @Service
@@ -15,7 +16,7 @@ class UserEducationHandlerService(
     private val userEducationReadRepository: UserEducationReadRepository,
     private val universityHandlerService: UniversityHandlerService,
 ) {
-    fun createOrUpdate(domain: UserEducationEventData): UserEducationReadEntity {
+    fun createOrUpdate(domain: UserEducationEventData, status: VerificationStatus? = null): UserEducationReadEntity {
         userEducationReadRepository.findById(domain.id).orElse(
             UserEducationReadEntity(domain.id).apply {
                 userId = domain.userId
@@ -32,6 +33,7 @@ class UserEducationHandlerService(
             if (data.university.id != domain.universityId)
                 data.university = universityHandlerService.getUniversityData(domain.universityId)
 
+            status?.let { this.status = it }
             userId = domain.userId
             data.degree = domain.degree
             data.startDate = domain.startDate

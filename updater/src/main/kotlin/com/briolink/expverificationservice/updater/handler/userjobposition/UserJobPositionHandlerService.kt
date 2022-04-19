@@ -1,12 +1,13 @@
 package com.briolink.expverificationservice.updater.handler.userjobposition
 
+import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.entity.UserJobPositionReadEntity
 import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserJobPositionReadRepository
 import com.briolink.expverificationservice.updater.handler.company.CompanyHandlerService
-import java.util.UUID
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 import javax.persistence.EntityNotFoundException
 
 @Service
@@ -15,7 +16,7 @@ class UserJobPositionHandlerService(
     private val userJobPositionReadRepository: UserJobPositionReadRepository,
     private val companyHandlerService: CompanyHandlerService,
 ) {
-    fun createOrUpdate(domain: UserJobPositionEventData): UserJobPositionReadEntity {
+    fun createOrUpdate(domain: UserJobPositionEventData, status: VerificationStatus? = null): UserJobPositionReadEntity {
         userJobPositionReadRepository.findById(domain.id).orElse(
             UserJobPositionReadEntity(domain.id).apply {
                 companyId = domain.companyId
@@ -29,6 +30,8 @@ class UserJobPositionHandlerService(
         ).apply {
             if (data.company.id != domain.companyId)
                 data.company = companyHandlerService.getCompanyData(domain.companyId)
+
+            status?.let { this.status = it }
 
             data.title = domain.title
             data.startDate = domain.startDate!!
