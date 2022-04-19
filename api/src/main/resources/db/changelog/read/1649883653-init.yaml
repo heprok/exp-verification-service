@@ -60,6 +60,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: status
+                  type: smallint
+                  constraints:
+                    nullable: false
+              - column:
                   name: user_id
                   type: uuid
                   constraints:
@@ -74,7 +79,8 @@ databaseChangeLog:
             sql: create index idx_user_job_position_company_id on read.user_job_position using btree (company_id)
         - sql:
             sql: create index idx_user_job_position_user_id on read.user_job_position using btree (user_id)
-
+        - sql:
+            sql: create index idx_user_job_position_status on read.user_job_position using using hash (status pg_catalog.int2_ops)
 
         - createTable:
             tableName: user_education
@@ -91,6 +97,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: status
+                  type: smallint
+                  constraints:
+                    nullable: false
+              - column:
                   name: user_id
                   type: uuid
                   constraints:
@@ -102,6 +113,8 @@ databaseChangeLog:
                     nullable: false
         - sql:
             sql: create index idx_user_education_university_id on read.user_education using btree (university_id)
+        - sql:
+            sql: create index idx_user_education_status on read.user_education using using hash (status pg_catalog.int2_ops)
         - sql:
             sql: create index idx_user_education_user_id on read.user_education using btree (user_id)
 

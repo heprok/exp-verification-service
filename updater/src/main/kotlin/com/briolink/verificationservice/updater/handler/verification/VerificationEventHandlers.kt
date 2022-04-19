@@ -22,7 +22,9 @@ class VerificationEventHandler(
 ) : IEventHandler<VerificationCreatedEvent> {
     override fun handle(event: VerificationCreatedEvent) {
         when (event.data.objectConfirmType) {
-            ObjectConfirmType.Education -> educationVerificationHandlerService.createOrUpdate(event.data)
+            ObjectConfirmType.Education -> {
+                educationVerificationHandlerService.createOrUpdate(event.data)
+            }
             ObjectConfirmType.WorkExperience -> workExperienceVerificationHandlerService.createOrUpdate(event.data)
         }
     }

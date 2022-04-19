@@ -4,6 +4,7 @@ import org.joda.time.DateTime
 import org.springframework.boot.CommandLineRunner
 import java.time.Instant
 import java.time.LocalDate
+import java.util.UUID
 import kotlin.random.Random
 
 abstract class DataLoader : CommandLineRunner {
@@ -20,6 +21,14 @@ abstract class DataLoader : CommandLineRunner {
         val month: Int = Random.nextInt(1, 12)
         val year: Int = Random.nextInt(startYear, endYear)
         return LocalDate.of(year, month, day)
+    }
+
+    fun randomIds(list: List<UUID>, count: Int, excludeIds: List<UUID>? = null): List<UUID> {
+        val result = mutableListOf<UUID>()
+
+        val ids = list.filter { !(excludeIds?.contains(it) ?: false) }
+        println(ids)
+        return ids.subList(0, count)
     }
 
     fun randomInstant(startYear: Int, endYear: Int): Instant {
