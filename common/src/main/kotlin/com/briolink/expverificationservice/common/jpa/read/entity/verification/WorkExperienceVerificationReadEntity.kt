@@ -1,9 +1,9 @@
 package com.briolink.expverificationservice.common.jpa.read.entity.verification
 
 import com.briolink.expverificationservice.common.jpa.read.entity.UserJobPositionReadEntity
-import java.util.UUID
 import org.hibernate.annotations.ColumnTransformer
 import org.hibernate.annotations.Type
+import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.PrePersist

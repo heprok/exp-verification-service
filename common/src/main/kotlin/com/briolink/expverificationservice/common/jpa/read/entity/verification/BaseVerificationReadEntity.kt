@@ -5,12 +5,12 @@ import com.briolink.expverificationservice.common.jpa.read.entity.UserReadEntity
 import com.vladmihalcea.hibernate.type.array.UUIDArrayType
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
 import com.vladmihalcea.hibernate.type.search.PostgreSQLTSVectorType
-import java.time.Instant
-import java.util.UUID
 import org.hibernate.annotations.ColumnTransformer
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.hibernate.annotations.TypeDefs
+import java.time.Instant
+import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass

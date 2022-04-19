@@ -1,12 +1,12 @@
 package com.briolink.expverificationservice.common.jpa.read.repository
 
 import com.briolink.expverificationservice.common.jpa.read.entity.verification.WorkExperienceVerificationReadEntity
-import java.time.LocalDate
-import java.util.UUID
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.time.LocalDate
+import java.util.UUID
 
 interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienceVerificationReadEntity, UUID> {
     @Modifying

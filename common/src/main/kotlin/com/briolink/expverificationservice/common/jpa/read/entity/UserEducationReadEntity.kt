@@ -2,9 +2,9 @@ package com.briolink.expverificationservice.common.jpa.read.entity
 
 import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.hibernate.annotations.Type
 import java.time.LocalDate
 import java.util.UUID
-import org.hibernate.annotations.Type
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id

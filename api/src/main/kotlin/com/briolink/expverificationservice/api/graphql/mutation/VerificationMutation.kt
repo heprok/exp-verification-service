@@ -16,8 +16,8 @@ import com.briolink.expverificationservice.common.enumeration.ActionTypeEnum
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
-import java.util.UUID
 import org.springframework.security.access.prepost.PreAuthorize
+import java.util.UUID
 
 @DgsComponent
 class VerificationMutation(

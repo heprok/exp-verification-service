@@ -4,11 +4,11 @@ import com.briolink.expverificationservice.api.exception.UnavailableException
 import com.briolink.expverificationservice.common.jpa.read.entity.UserReadEntity
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
 import com.netflix.graphql.dgs.client.MonoGraphQLClient
-import java.util.UUID
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.reactive.function.client.WebClient
+import java.util.UUID
 
 @Service
 class UserService(
