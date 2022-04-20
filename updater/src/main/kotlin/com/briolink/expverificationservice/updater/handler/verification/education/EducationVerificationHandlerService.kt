@@ -3,6 +3,9 @@ package com.briolink.expverificationservice.updater.handler.verification.educati
 import com.briolink.expverificationservice.common.domain.v1_0.ObjectConfirmType
 import com.briolink.expverificationservice.common.domain.v1_0.Verification
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
+import com.briolink.expverificationservice.common.jpa.read.entity.UniversityReadEntity
+import com.briolink.expverificationservice.common.jpa.read.entity.UserEducationReadEntity
+import com.briolink.expverificationservice.common.jpa.read.entity.UserReadEntity
 import com.briolink.expverificationservice.common.jpa.read.entity.verification.EducationVerificationReadEntity
 import com.briolink.expverificationservice.common.jpa.read.repository.EducationVerificationReadRepository
 import com.briolink.expverificationservice.updater.handler.user.UserHandlerService
@@ -27,7 +30,7 @@ class EducationVerificationHandlerService(
         educationVerificationReadRepository.findById(domain.id).orElse(EducationVerificationReadEntity()).apply {
             id = domain.id
             userId = domain.userId
-            userFullName = user.data.firstName + " " + user.data.lastName
+            userFullName = user.fullName
             userToConfirmIds = domain.userToConfirmIds.toArray(arrayOfNulls<UUID>(domain.userToConfirmIds.size))
             actionAt = domain.actionAt
             actionBy = domain.actionBy
@@ -42,7 +45,37 @@ class EducationVerificationHandlerService(
             degree = userEducation.data.degree
             userEducationData = userEducation.data
 
-            return educationVerificationReadRepository.save(this)
+            return educationVerificationReadRepository.save(this).also {
+                educationHandlerService.updateStatus(userEducation.id, it.status)
+            }
         }
+    }
+
+    fun updateUser(user: UserReadEntity) {
+        educationVerificationReadRepository.updateUser(
+            userId = user.id,
+            slug = user.data.slug,
+            fullName = user.fullName,
+            firstName = user.data.firstName,
+            lastName = user.data.lastName,
+            image = user.data.image?.toString(),
+        )
+    }
+
+    fun updateUniversity(university: UniversityReadEntity) {
+        educationVerificationReadRepository.updateUniversity(
+            universityId = university.id,
+            name = university.data.name,
+            logo = university.data.logo?.toString()
+        )
+    }
+
+    fun updateUserEducation(education: UserEducationReadEntity) {
+        educationVerificationReadRepository.updateEducation(
+            userEducationId = education.id,
+            startDate = education.data.startDate,
+            endDate = education.data.endDate,
+            degree = education.data.degree
+        )
     }
 }

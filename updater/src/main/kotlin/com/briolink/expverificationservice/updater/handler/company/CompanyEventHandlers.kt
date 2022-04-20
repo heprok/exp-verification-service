@@ -1,6 +1,7 @@
 package com.briolink.expverificationservice.updater.handler.company
 
-import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
+import com.briolink.expverificationservice.updater.handler.userjobposition.UserJobPositionHandlerService
+import com.briolink.expverificationservice.updater.handler.verification.workexperience.WorkExperienceVerificationHandlerService
 import com.briolink.expverificationservice.updater.service.SyncService
 import com.briolink.lib.event.IEventHandler
 import com.briolink.lib.event.annotation.EventHandler
@@ -16,11 +17,14 @@ import org.springframework.transaction.annotation.Transactional
 )
 class CompanyEventHandler(
     private val companyHandlerService: CompanyHandlerService,
+    private val workExperienceVerificationHandlerService: WorkExperienceVerificationHandlerService,
+    private val userJobPositionHandlerService: UserJobPositionHandlerService
 ) : IEventHandler<CompanyCreatedEvent> {
     override fun handle(event: CompanyCreatedEvent) {
         companyHandlerService.createOrUpdate(event.data).also {
             if (event.name == "CompanyUpdatedEvent") {
-                // companyHandlerService.updateLocation(it)
+                workExperienceVerificationHandlerService.updateCompany(it)
+                userJobPositionHandlerService.updateCompany(it)
             }
         }
     }
@@ -29,8 +33,9 @@ class CompanyEventHandler(
 @EventHandler("CompanySyncEvent", "1.0")
 @Transactional
 class CompanySyncEventHandler(
-    private val companyReadRepository: CompanyReadRepository,
     private val companyHandlerService: CompanyHandlerService,
+    private val workExperienceVerificationHandlerService: WorkExperienceVerificationHandlerService,
+    private val userJobPositionHandlerService: UserJobPositionHandlerService,
     syncService: SyncService,
 ) : SyncEventHandler<CompanySyncEvent>(ObjectSyncEnum.Company, syncService) {
     override fun handle(event: CompanySyncEvent) {
@@ -38,7 +43,10 @@ class CompanySyncEventHandler(
         if (!objectSyncStarted(syncData)) return
         try {
             val objectSync = syncData.objectSync!!
-            companyHandlerService.createOrUpdate(objectSync)
+            companyHandlerService.createOrUpdate(objectSync).also {
+                workExperienceVerificationHandlerService.updateCompany(it)
+                userJobPositionHandlerService.updateCompany(it)
+            }
         } catch (ex: Exception) {
             sendError(syncData, ex)
         }

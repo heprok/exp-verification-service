@@ -4,7 +4,6 @@ import com.briolink.expverificationservice.api.service.verifcation.education.Edu
 import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.entity.UserEducationReadEntity
-import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.EducationVerificationReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UniversityReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserEducationReadRepository
@@ -19,7 +18,6 @@ class EducationVerificationDataLoader(
     private val educationVerificationReadRepository: EducationVerificationReadRepository,
     private val universityReadRepository: UniversityReadRepository,
     private var userReadRepository: UserReadRepository,
-    private var companyReadRepository: CompanyReadRepository,
     private val userEducationReadRepository: UserEducationReadRepository,
     private val educationVerificationService: EducationVerificationService
 ) : DataLoader() {
@@ -60,7 +58,7 @@ class EducationVerificationDataLoader(
 
                 val confirmToUsersIds = confirmedEducationWithNotUser
                     .shuffled()
-                    .subList(1, Random.nextInt(2, 6))
+                    .subList(1, Random.nextInt(2, confirmedEducationWithNotUser.count()))
                     .map { it.userId }
 
                 educationVerificationService.addVerification(

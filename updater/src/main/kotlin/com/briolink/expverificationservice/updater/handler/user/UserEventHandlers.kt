@@ -1,5 +1,7 @@
 package com.briolink.expverificationservice.updater.handler.user
 
+import com.briolink.expverificationservice.updater.handler.verification.education.EducationVerificationHandlerService
+import com.briolink.expverificationservice.updater.handler.verification.workexperience.WorkExperienceVerificationHandlerService
 import com.briolink.expverificationservice.updater.service.SyncService
 import com.briolink.lib.event.IEventHandler
 import com.briolink.lib.event.annotation.EventHandler
@@ -15,11 +17,14 @@ import org.springframework.transaction.annotation.Transactional
 )
 class UserCreatedEventHandler(
     private val userHandlerService: UserHandlerService,
+    private val workExperienceVerificationHandlerService: WorkExperienceVerificationHandlerService,
+    private val educationVerificationHandlerService: EducationVerificationHandlerService
 ) : IEventHandler<UserCreatedEvent> {
     override fun handle(event: UserCreatedEvent) {
         userHandlerService.createOrUpdate(event.data).also {
             if (event.name == "UserUpdatedEvent") {
-                // userHandlerService.updateLocation(it)
+                workExperienceVerificationHandlerService.updateUser(it)
+                educationVerificationHandlerService.updateUser(it)
             }
         }
     }
@@ -29,6 +34,8 @@ class UserCreatedEventHandler(
 @EventHandler("UserSyncEvent", "1.0")
 class UserSyncEventHandler(
     private val userHandlerService: UserHandlerService,
+    private val workExperienceVerificationHandlerService: WorkExperienceVerificationHandlerService,
+    private val educationVerificationHandlerService: EducationVerificationHandlerService,
     syncService: SyncService,
 ) : SyncEventHandler<UserSyncEvent>(ObjectSyncEnum.User, syncService) {
     override fun handle(event: UserSyncEvent) {
@@ -36,7 +43,10 @@ class UserSyncEventHandler(
         if (!objectSyncStarted(syncData)) return
         try {
             val objectSync = syncData.objectSync!!
-            userHandlerService.createOrUpdate(objectSync)
+            userHandlerService.createOrUpdate(objectSync).also {
+                workExperienceVerificationHandlerService.updateUser(it)
+                educationVerificationHandlerService.updateUser(it)
+            }
         } catch (ex: Exception) {
             sendError(syncData, ex)
         }

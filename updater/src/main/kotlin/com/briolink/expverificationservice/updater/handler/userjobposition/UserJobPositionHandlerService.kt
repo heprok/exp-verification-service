@@ -1,8 +1,9 @@
 package com.briolink.expverificationservice.updater.handler.userjobposition
 
 import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
+import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
+import com.briolink.expverificationservice.common.jpa.read.entity.CompanyReadEntity
 import com.briolink.expverificationservice.common.jpa.read.entity.UserJobPositionReadEntity
-import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserJobPositionReadRepository
 import com.briolink.expverificationservice.updater.handler.company.CompanyHandlerService
 import org.springframework.stereotype.Service
@@ -46,7 +47,15 @@ class UserJobPositionHandlerService(
             EntityNotFoundException("UserJobPosition with id $id not found")
         }
 
-    fun updateCompany(company: CompanyReadRepository) {
-        TODO("not implemented")
+    fun updateCompany(company: CompanyReadEntity) {
+        userJobPositionReadRepository.updateCompany(
+            companyId = company.id,
+            slug = company.data.slug,
+            name = company.data.name,
+            logo = company.data.logo?.toString()
+        )
     }
+
+    fun updateStatus(id: UUID, status: VerificationStatusEnum): Int =
+        userJobPositionReadRepository.updateStatus(id, status.value)
 }

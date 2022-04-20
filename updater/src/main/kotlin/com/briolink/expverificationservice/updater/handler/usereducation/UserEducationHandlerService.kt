@@ -1,8 +1,9 @@
 package com.briolink.expverificationservice.updater.handler.usereducation
 
 import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
+import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
+import com.briolink.expverificationservice.common.jpa.read.entity.UniversityReadEntity
 import com.briolink.expverificationservice.common.jpa.read.entity.UserEducationReadEntity
-import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserEducationReadRepository
 import com.briolink.expverificationservice.updater.handler.university.UniversityHandlerService
 import org.springframework.stereotype.Service
@@ -15,6 +16,7 @@ import javax.persistence.EntityNotFoundException
 class UserEducationHandlerService(
     private val userEducationReadRepository: UserEducationReadRepository,
     private val universityHandlerService: UniversityHandlerService,
+
 ) {
     fun createOrUpdate(domain: UserEducationEventData, status: VerificationStatus? = null): UserEducationReadEntity {
         userEducationReadRepository.findById(domain.id).orElse(
@@ -46,7 +48,14 @@ class UserEducationHandlerService(
         return userEducationReadRepository.findById(id).orElseThrow { throw EntityNotFoundException("UserEducation with id $id not found") }
     }
 
-    fun updateCompany(university: CompanyReadRepository) {
-        TODO("not implemented")
+    fun updateUniversity(university: UniversityReadEntity) {
+        userEducationReadRepository.updateUniversity(
+            universityId = university.id,
+            name = university.data.name,
+            logo = university.data.logo?.toString()
+        )
     }
+
+    fun updateStatus(id: UUID, status: VerificationStatusEnum): Int =
+        userEducationReadRepository.updateStatus(id, status.value)
 }

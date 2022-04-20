@@ -1,5 +1,7 @@
 package com.briolink.expverificationservice.updater.handler.university
 
+import com.briolink.expverificationservice.updater.handler.usereducation.UserEducationHandlerService
+import com.briolink.expverificationservice.updater.handler.verification.education.EducationVerificationHandlerService
 import com.briolink.expverificationservice.updater.service.SyncService
 import com.briolink.lib.event.IEventHandler
 import com.briolink.lib.event.annotation.EventHandler
@@ -15,11 +17,14 @@ import org.springframework.transaction.annotation.Transactional
 )
 class UniversityEventHandler(
     private val universityHandlerService: UniversityHandlerService,
+    private val userEducationHandlerService: UserEducationHandlerService,
+    private val educationVerificationHandlerService: EducationVerificationHandlerService,
 ) : IEventHandler<UniversityCreatedEvent> {
     override fun handle(event: UniversityCreatedEvent) {
         universityHandlerService.createOrUpdate(event.data).also {
             if (event.name == "UniversityUpdatedEvent") {
-                // universityHandlerService.updateLocation(it)
+                userEducationHandlerService.updateUniversity(it)
+                educationVerificationHandlerService.updateUniversity(it)
             }
         }
     }
@@ -29,6 +34,9 @@ class UniversityEventHandler(
 @EventHandler("UniversitySyncEvent", "1.0")
 class UniversitySyncEventHandler(
     private val universityHandlerService: UniversityHandlerService,
+    private val userEducationHandlerService: UserEducationHandlerService,
+    private val educationVerificationHandlerService: EducationVerificationHandlerService,
+
     syncService: SyncService,
 ) : SyncEventHandler<UniversitySyncEvent>(ObjectSyncEnum.University, syncService) {
     override fun handle(event: UniversitySyncEvent) {
@@ -36,7 +44,10 @@ class UniversitySyncEventHandler(
         if (!objectSyncStarted(syncData)) return
         try {
             val objectSync = syncData.objectSync!!
-            universityHandlerService.createOrUpdate(objectSync)
+            universityHandlerService.createOrUpdate(objectSync).also {
+                userEducationHandlerService.updateUniversity(it)
+                educationVerificationHandlerService.updateUniversity(it)
+            }
         } catch (ex: Exception) {
             sendError(syncData, ex)
         }

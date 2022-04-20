@@ -74,7 +74,7 @@ interface EducationVerificationReadRepository : JpaRepository<EducationVerificat
     )
     fun updateEducation(
         @Param("userEducationId") userEducationId: UUID,
-        @Param("degree") title: String,
+        @Param("degree") degree: String,
         @Param("startDate") startDate: LocalDate,
         @Param("endDate") endDate: LocalDate? = null,
     )

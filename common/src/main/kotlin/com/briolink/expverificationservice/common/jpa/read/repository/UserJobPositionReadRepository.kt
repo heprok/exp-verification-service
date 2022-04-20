@@ -29,6 +29,15 @@ interface UserJobPositionReadRepository : JpaRepository<UserJobPositionReadEntit
         @Param("logo") logo: String? = null,
     )
 
+    @Modifying
+    @Query(
+        """update UserJobPositionReadEntity u
+           set u._status = ?2
+           where u.id = ?1
+        """,
+    )
+    fun updateStatus(id: UUID, status: Int): Int
+
     @Query("select (count(u) > 0) from UserJobPositionReadEntity u where u.id = ?1 and u.userId = ?2 and u._status = ?3")
     fun existByIdAndUserAndStatus(id: UUID, userId: UUID, status: Int): Boolean
 }

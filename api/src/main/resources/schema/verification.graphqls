@@ -16,7 +16,6 @@ enum VerificationStatus {
 
 type Verification{
     id: ID!
-    status: VerificationStatus!
     user: User!
     confirmData: ConfirmData!
 }

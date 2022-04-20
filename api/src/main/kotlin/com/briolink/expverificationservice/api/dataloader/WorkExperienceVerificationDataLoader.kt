@@ -17,7 +17,7 @@ import kotlin.random.Random
 class WorkExperienceVerificationDataLoader(
     private val workExperienceVerificationReadRepository: WorkExperienceVerificationReadRepository,
     private val userReadRepository: UserReadRepository,
-    private val userJobPositionRepository: UserJobPositionReadRepository,
+    private val userJobPositionReadRepository: UserJobPositionReadRepository,
     private val companyReadRepository: CompanyReadRepository,
     private val workExperienceVerificationService: WorkExperienceVerificationService
 ) : DataLoader() {
@@ -25,11 +25,11 @@ class WorkExperienceVerificationDataLoader(
     override fun loadData() {
         if (workExperienceVerificationReadRepository.count().toInt() == 0 &&
             userReadRepository.count().toInt() != 0 &&
-            userJobPositionRepository.count().toInt() != 0
+            userJobPositionReadRepository.count().toInt() != 0
         ) {
             val users = userReadRepository.findAll()
             val companies = companyReadRepository.findAll()
-            val userJobPositions = userJobPositionRepository.findAll()
+            val userJobPositions = userJobPositionReadRepository.findAll()
 
             for (i in 1..COUNT_WORKEXP_VERIFICATION) {
                 val randomUser = users.random()
@@ -50,13 +50,13 @@ class WorkExperienceVerificationDataLoader(
                             it.companyId == randomCompany.id
                     }
 
-                if (notConfirmedJobPosition.isEmpty() && confirmedJobPositionWithNotUser.isEmpty()) continue
+                if (notConfirmedJobPosition.isEmpty() || confirmedJobPositionWithNotUser.isEmpty()) continue
 
-                val randomUserJobPosition = confirmedJobPositionWithNotUser.random()
+                val randomUserJobPosition = notConfirmedJobPosition.random()
 
                 val confirmToUsersIds = confirmedJobPositionWithNotUser
                     .shuffled()
-                    .subList(1, Random.nextInt(2, 6))
+                    .subList(1, Random.nextInt(2, confirmedJobPositionWithNotUser.count()))
                     .map { it.userId }
 
                 workExperienceVerificationService.addVerification(

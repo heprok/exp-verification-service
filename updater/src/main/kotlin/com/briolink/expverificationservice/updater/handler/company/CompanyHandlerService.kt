@@ -10,7 +10,7 @@ import javax.persistence.EntityNotFoundException
 @Service
 @Transactional
 class CompanyHandlerService(
-    private val companyReadRepository: CompanyReadRepository
+    private val companyReadRepository: CompanyReadRepository,
 ) {
     fun createOrUpdate(domain: CompanyEventData): CompanyReadEntity {
         companyReadRepository.findById(domain.id).orElse(CompanyReadEntity(domain.id)).apply {

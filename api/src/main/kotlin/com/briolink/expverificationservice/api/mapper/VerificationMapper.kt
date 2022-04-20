@@ -26,14 +26,12 @@ fun VerificationStatus.Companion.fromEnum(enum: VerificationStatusEnum): Verific
 
 fun Verification.Companion.fromEducationVerificationRead(entity: EducationVerificationReadEntity) = Verification(
     id = entity.id.toString(),
-    status = VerificationStatus.fromEnum(entity.status),
     user = User.fromUserData(entity.userData),
     confirmData = ConfirmData.fromUserEducationData(entity.userEducationData),
 )
 
 fun Verification.Companion.fromWorkExpVerificationRead(entity: WorkExperienceVerificationReadEntity) = Verification(
     id = entity.id.toString(),
-    status = VerificationStatus.fromEnum(entity.status),
     user = User.fromUserData(entity.userData),
     confirmData = ConfirmData.fromUserJobPositionData(entity.userJobPositionData),
 )

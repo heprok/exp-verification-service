@@ -24,6 +24,9 @@ class UserReadEntity(
     @Column(name = "data")
     lateinit var data: UserData
 
+    val fullName: String
+        get() = data.firstName + " " + data.lastName
+
     data class UserData(
         @JsonProperty
         val id: UUID,

@@ -16,6 +16,7 @@ import com.briolink.expverificationservice.common.enumeration.ActionTypeEnum
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
+import com.netflix.graphql.dgs.exceptions.DgsEntityNotFoundException
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.UUID
 
@@ -53,6 +54,10 @@ class VerificationMutation(
             VerificationRequestResult(
                 userErrors = listOf(Error(ex.message))
             )
+        } catch (ex: DgsEntityNotFoundException) {
+            VerificationRequestResult(
+                userErrors = listOf(Error(ex.message))
+            )
         }
     }
 
@@ -83,7 +88,12 @@ class VerificationMutation(
         } catch (ex: UserErrorGraphQlException) {
             ConfirmVerificationResult(
                 success = false,
-                userErrors = listOf(com.briolink.expverificationservice.api.types.Error(ex.message))
+                userErrors = listOf(Error(ex.message))
+            )
+        } catch (ex: DgsEntityNotFoundException) {
+            ConfirmVerificationResult(
+                success = false,
+                userErrors = listOf(Error(ex.message))
             )
         }
     }

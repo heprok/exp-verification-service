@@ -10,7 +10,7 @@ import javax.persistence.EntityNotFoundException
 @Service
 @Transactional
 class UserHandlerService(
-    private val userReadRepository: UserReadRepository
+    private val userReadRepository: UserReadRepository,
 ) {
     fun createOrUpdate(domain: UserEventData): UserReadEntity {
         userReadRepository.findById(domain.id).orElse(UserReadEntity(domain.id)).apply {
@@ -27,7 +27,4 @@ class UserHandlerService(
 
     fun getById(id: UUID): UserReadEntity =
         userReadRepository.findById(id).orElseThrow { EntityNotFoundException("User with id $id not found") }
-
-    fun updateUser(entity: UserReadEntity) {
-    }
 }
