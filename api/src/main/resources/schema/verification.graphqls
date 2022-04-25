@@ -56,6 +56,11 @@ type VerificationRequestResult {
     userErrors: [Error]!
 }
 
+type ResetVerificationResult {
+    success: Boolean!
+    status: VerificationStatus!
+}
+
 type ConfirmVerificationResult {
     success: Boolean!
     userErrors: [Error]!

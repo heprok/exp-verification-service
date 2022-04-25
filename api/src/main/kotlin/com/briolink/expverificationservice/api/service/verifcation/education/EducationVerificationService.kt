@@ -3,6 +3,7 @@ package com.briolink.expverificationservice.api.service.verifcation.education
 import com.briolink.expverificationservice.api.service.verifcation.VerificationService
 import com.briolink.expverificationservice.common.enumeration.ObjectConfirmTypeEnum
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
+import com.briolink.expverificationservice.common.jpa.read.repository.EducationVerificationReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserEducationReadRepository
 import com.briolink.expverificationservice.common.jpa.write.repository.ObjectConfirmTypeWriteRepository
 import com.briolink.expverificationservice.common.jpa.write.repository.VerificationStatusWriteRepository
@@ -23,10 +24,14 @@ class EducationVerificationService(
     override val verificationStatusWriteRepository: VerificationStatusWriteRepository,
 
     private val userEducationReadRepository: UserEducationReadRepository,
+    private val educationVerificationReadRepository: EducationVerificationReadRepository
 ) : VerificationService() {
 
     override val objectTypeVerification: ObjectConfirmTypeEnum = ObjectConfirmTypeEnum.Education
 
     override fun existObjectIdAndUserIdAndStatus(objectId: UUID, userId: UUID, status: VerificationStatusEnum): Boolean =
         userEducationReadRepository.existByIdAndUserAndStatus(objectId, userId, status.value)
+
+    override fun setVerificationStatusInReadRepository(verificationId: UUID, status: VerificationStatusEnum): Boolean =
+        educationVerificationReadRepository.updateStatusById(verificationId, status.value) > 0
 }

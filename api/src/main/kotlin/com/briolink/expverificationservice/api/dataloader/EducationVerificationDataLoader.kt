@@ -2,7 +2,7 @@ package com.briolink.expverificationservice.api.dataloader
 
 import com.briolink.expverificationservice.api.service.verifcation.education.EducationVerificationService
 import com.briolink.expverificationservice.common.dataloader.DataLoader
-import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
+import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.entity.UserEducationReadEntity
 import com.briolink.expverificationservice.common.jpa.read.repository.EducationVerificationReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UniversityReadRepository
@@ -40,13 +40,13 @@ class EducationVerificationDataLoader(
 
                 userEducations
                     .filterTo(notConfirmedEducation) {
-                        it.userId == randomUser.id && it.status == VerificationStatus.NotConfirmed &&
+                        it.userId == randomUser.id && it.status == ExpVerificationStatus.NotConfirmed &&
                             it.universityId == randomUniversity.id
                     }
 
                 userEducations
                     .filterTo(confirmedEducationWithNotUser) {
-                        it.userId != randomUser.id && it.status == VerificationStatus.Confirmed &&
+                        it.userId != randomUser.id && it.status == ExpVerificationStatus.Confirmed &&
                             it.universityId == randomUniversity.id
                     }
 

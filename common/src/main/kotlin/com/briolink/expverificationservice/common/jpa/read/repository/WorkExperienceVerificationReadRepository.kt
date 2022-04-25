@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import java.time.LocalDate
 import java.util.UUID
 
 interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienceVerificationReadEntity, UUID> {
@@ -68,8 +67,8 @@ interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienc
                u.userJobPositionData = function('jsonb_sets', u.userJobPositionData,
                     '{id}', :userJobPositionId, uuid,
                     '{title}', :title, text,
-                    '{startDate}', :startDate, date,
-                    '{endDate}', :endDate, date
+                    '{startDate}', :startDate, text,
+                    '{endDate}', :endDate, text
                )
            where u.userJobPositionId = :userJobPositionId
         """,
@@ -77,8 +76,8 @@ interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienc
     fun updateJobPosition(
         @Param("userJobPositionId") userJobPositionId: UUID,
         @Param("title") title: String,
-        @Param("startDate") startDate: LocalDate,
-        @Param("endDate") endDate: LocalDate? = null,
+        @Param("startDate") startDate: String,
+        @Param("endDate") endDate: String? = null,
     )
 
     @Query(
@@ -128,4 +127,8 @@ interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienc
         @Param("status") status: Int = VerificationStatusEnum.Pending.value,
         pageable: Pageable = Pageable.ofSize(10)
     ): List<BaseSuggestion>
+
+    @Modifying
+    @Query("update WorkExperienceVerificationReadEntity u set u._status = ?2 where u.id = ?1")
+    fun updateStatusById(id: UUID, status: Int): Int
 }

@@ -1,6 +1,6 @@
 package com.briolink.expverificationservice.updater.handler.userjobposition
 
-import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
+import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.expverificationservice.common.jpa.read.entity.CompanyReadEntity
 import com.briolink.expverificationservice.common.jpa.read.entity.UserJobPositionReadEntity
@@ -17,7 +17,7 @@ class UserJobPositionHandlerService(
     private val userJobPositionReadRepository: UserJobPositionReadRepository,
     private val companyHandlerService: CompanyHandlerService,
 ) {
-    fun createOrUpdate(domain: UserJobPositionEventData, status: VerificationStatus? = null): UserJobPositionReadEntity {
+    fun createOrUpdate(domain: UserJobPositionEventData, status: ExpVerificationStatus? = null): UserJobPositionReadEntity {
         userJobPositionReadRepository.findById(domain.id).orElse(
             UserJobPositionReadEntity(domain.id).apply {
                 companyId = domain.companyId

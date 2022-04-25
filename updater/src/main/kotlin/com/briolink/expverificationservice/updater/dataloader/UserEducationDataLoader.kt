@@ -1,7 +1,7 @@
 package com.briolink.expverificationservice.updater.dataloader
 
 import com.briolink.expverificationservice.common.dataloader.DataLoader
-import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
+import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.repository.UniversityReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserEducationReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
@@ -47,7 +47,7 @@ class UserEducationDataLoader(
                         degree = degreeList.random(),
                         userId = users.random().id
                     ),
-                    VerificationStatus.values().random()
+                    ExpVerificationStatus.values().random()
                 )
             }
         }

@@ -1,7 +1,7 @@
 package com.briolink.expverificationservice.updater.handler.verification.education
 
+import com.briolink.expverificationservice.common.domain.v1_0.ExpVerification
 import com.briolink.expverificationservice.common.domain.v1_0.ObjectConfirmType
-import com.briolink.expverificationservice.common.domain.v1_0.Verification
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.expverificationservice.common.jpa.read.entity.UniversityReadEntity
 import com.briolink.expverificationservice.common.jpa.read.entity.UserEducationReadEntity
@@ -21,7 +21,7 @@ class EducationVerificationHandlerService(
     private val userHandlerService: UserHandlerService,
     private val educationVerificationReadRepository: EducationVerificationReadRepository,
 ) {
-    fun createOrUpdate(domain: Verification): EducationVerificationReadEntity {
+    fun createOrUpdate(domain: ExpVerification): EducationVerificationReadEntity {
         if (domain.objectConfirmType != ObjectConfirmType.Education) throw IllegalArgumentException("ObjectConfirmType is not Education")
 
         val userEducation = educationHandlerService.getById(domain.objectConfirmId)
@@ -49,6 +49,10 @@ class EducationVerificationHandlerService(
                 educationHandlerService.updateStatus(userEducation.id, it.status)
             }
         }
+    }
+
+    fun setStatus(userEducationId: UUID, status: VerificationStatusEnum) {
+        educationHandlerService.updateStatus(userEducationId, status)
     }
 
     fun updateUser(user: UserReadEntity) {

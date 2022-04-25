@@ -15,19 +15,19 @@ enum class ObjectConfirmType(@JsonValue val value: Int) {
     }
 }
 
-enum class VerificationStatus(@JsonValue val value: Int) {
+enum class ExpVerificationStatus(@JsonValue val value: Int) {
     NotConfirmed(1),
     Pending(2),
     Confirmed(3),
     Rejected(4);
 
     companion object {
-        private val map = values().associateBy(VerificationStatus::value)
-        fun fromInt(type: Int): VerificationStatus = map[type]!!
+        private val map = values().associateBy(ExpVerificationStatus::value)
+        fun fromInt(type: Int): ExpVerificationStatus = map[type]!!
     }
 }
 
-data class Verification(
+data class ExpVerification(
     @JsonProperty
     val id: UUID,
     @JsonProperty
@@ -41,11 +41,20 @@ data class Verification(
     @JsonProperty
     val actionBy: UUID?,
     @JsonProperty
-    val status: VerificationStatus,
+    val status: ExpVerificationStatus,
     @JsonProperty
     var actionAt: Instant?,
     @JsonProperty
     var created: Instant,
     @JsonProperty
     var changed: Instant?,
+) : Domain
+
+data class ExpVerificationChangeStatusEventData(
+    @JsonProperty
+    val objectConfirmId: UUID,
+    @JsonProperty
+    val objectConfirmType: ObjectConfirmType,
+    @JsonProperty
+    val status: ExpVerificationStatus,
 ) : Domain

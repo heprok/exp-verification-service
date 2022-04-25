@@ -17,9 +17,12 @@ class UserJobPositionCreatedEventHandler(
     private val workExperienceVerificationHandlerService: WorkExperienceVerificationHandlerService,
 ) : IEventHandler<UserJobPositionCreatedEvent> {
     override fun handle(event: UserJobPositionCreatedEvent) {
-        userJobPositionHandlerService.createOrUpdate(event.data).also {
-            if (event.name == "UserJobPositionUpdatedEvent") {
-                workExperienceVerificationHandlerService.updateUserJobPosition(it)
+        if (event.data.startDate != null) {
+
+            userJobPositionHandlerService.createOrUpdate(event.data).also {
+                if (event.name == "UserJobPositionUpdatedEvent") {
+                    workExperienceVerificationHandlerService.updateUserJobPosition(it)
+                }
             }
         }
     }
@@ -36,8 +39,10 @@ class UserJobPositionSyncEventHandler(
         if (!objectSyncStarted(syncData)) return
         try {
             val objectSync = syncData.objectSync!!
-            userJobPositionHandlerService.createOrUpdate(objectSync).also {
-                workExperienceVerificationHandlerService.updateUserJobPosition(it)
+            if (objectSync.startDate != null) {
+                userJobPositionHandlerService.createOrUpdate(objectSync).also {
+                    workExperienceVerificationHandlerService.updateUserJobPosition(it)
+                }
             }
         } catch (ex: Exception) {
             sendError(syncData, ex)

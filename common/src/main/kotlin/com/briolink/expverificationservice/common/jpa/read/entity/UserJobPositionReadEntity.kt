@@ -1,6 +1,6 @@
 package com.briolink.expverificationservice.common.jpa.read.entity
 
-import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
+import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.Type
 import java.time.LocalDate
@@ -24,10 +24,10 @@ class UserJobPositionReadEntity(
     lateinit var companyId: UUID
 
     @Column(name = "status", nullable = false)
-    private var _status: Int = VerificationStatus.NotConfirmed.value
+    private var _status: Int = ExpVerificationStatus.NotConfirmed.value
 
-    var status: VerificationStatus
-        get() = VerificationStatus.fromInt(_status)
+    var status: ExpVerificationStatus
+        get() = ExpVerificationStatus.fromInt(_status)
         set(value) {
             _status = value.value
         }

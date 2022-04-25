@@ -1,6 +1,6 @@
 package com.briolink.expverificationservice.updater.handler.usereducation
 
-import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
+import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.expverificationservice.common.jpa.read.entity.UniversityReadEntity
 import com.briolink.expverificationservice.common.jpa.read.entity.UserEducationReadEntity
@@ -18,7 +18,7 @@ class UserEducationHandlerService(
     private val universityHandlerService: UniversityHandlerService,
 
 ) {
-    fun createOrUpdate(domain: UserEducationEventData, status: VerificationStatus? = null): UserEducationReadEntity {
+    fun createOrUpdate(domain: UserEducationEventData, status: ExpVerificationStatus? = null): UserEducationReadEntity {
         userEducationReadRepository.findById(domain.id).orElse(
             UserEducationReadEntity(domain.id).apply {
                 userId = domain.userId

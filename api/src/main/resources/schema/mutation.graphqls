@@ -2,6 +2,8 @@ type Mutation {
     # Verification
     confirmVerification(id: ID!, action: VerificationConfirmAction!) : ConfirmVerificationResult!
 
-    # Local methods
+    # Private methods
     verificationRequest(byUserId: ID!, objectKey: ObjectKey!, usersToConfirmIds: [ID!]!): VerificationRequestResult!
+
+    resetVerification(objectKey: ObjectKey!, overrideStatus: VerificationStatus): ResetVerificationResult!
 }

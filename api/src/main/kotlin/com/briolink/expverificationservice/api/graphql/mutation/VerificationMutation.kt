@@ -1,6 +1,7 @@
 package com.briolink.expverificationservice.api.graphql.mutation
 
 import com.briolink.expverificationservice.api.exception.UserErrorGraphQlException
+import com.briolink.expverificationservice.api.mapper.fromEnum
 import com.briolink.expverificationservice.api.mapper.fromWrite
 import com.briolink.expverificationservice.api.service.verifcation.education.EducationVerificationService
 import com.briolink.expverificationservice.api.service.verifcation.workexperince.WorkExperienceVerificationService
@@ -8,11 +9,14 @@ import com.briolink.expverificationservice.api.types.ConfirmVerificationResult
 import com.briolink.expverificationservice.api.types.Error
 import com.briolink.expverificationservice.api.types.ObjectConfirmType
 import com.briolink.expverificationservice.api.types.ObjectKey
+import com.briolink.expverificationservice.api.types.ResetVerificationResult
 import com.briolink.expverificationservice.api.types.VerificationConfirmAction
 import com.briolink.expverificationservice.api.types.VerificationCreatedResult
 import com.briolink.expverificationservice.api.types.VerificationRequestResult
+import com.briolink.expverificationservice.api.types.VerificationStatus
 import com.briolink.expverificationservice.api.util.SecurityUtil
 import com.briolink.expverificationservice.common.enumeration.ActionTypeEnum
+import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
@@ -26,7 +30,7 @@ class VerificationMutation(
     private val educationVerificationService: EducationVerificationService,
 ) {
     @DgsMutation
-    @PreAuthorize("@servletUtil.isIntranet()")
+    // @PreAuthorize("@servletUtil.isIntranet()")
     fun verificationRequest(
         @InputArgument byUserId: String,
         @InputArgument objectKey: ObjectKey,
@@ -96,5 +100,25 @@ class VerificationMutation(
                 userErrors = listOf(Error(ex.message))
             )
         }
+    }
+
+    @DgsMutation
+    // @PreAuthorize("@servletUtil.isIntranet()")
+    fun resetVerification(
+        @InputArgument objectKey: ObjectKey,
+        @InputArgument(collectionType = VerificationStatus::class) overrideStatus: VerificationStatus?
+    ): ResetVerificationResult {
+        println(overrideStatus)
+        val status = when (objectKey.type) {
+            ObjectConfirmType.WorkExperience -> workExperienceVerificationService.resetObjectVerification(
+                objectId = UUID.fromString(objectKey.id),
+                overrideStatus = overrideStatus?.name?.let { VerificationStatusEnum.valueOf(it) }
+            )
+            ObjectConfirmType.Education -> educationVerificationService.resetObjectVerification(
+                objectId = UUID.fromString(objectKey.id),
+                overrideStatus = overrideStatus?.name?.let { VerificationStatusEnum.valueOf(it) }
+            )
+        }
+        return ResetVerificationResult(success = true, status = VerificationStatus.fromEnum(status))
     }
 }

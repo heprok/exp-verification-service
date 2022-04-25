@@ -1,11 +1,15 @@
 package com.briolink.expverificationservice.api.service.verifcation
 
 import com.briolink.expverificationservice.api.exception.UserErrorGraphQlException
+import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationChangeStatusEventData
+import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
+import com.briolink.expverificationservice.common.domain.v1_0.ObjectConfirmType
 import com.briolink.expverificationservice.common.enumeration.ActionTypeEnum
 import com.briolink.expverificationservice.common.enumeration.ObjectConfirmTypeEnum
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
-import com.briolink.expverificationservice.common.event.v1_0.VerificationCreatedEvent
-import com.briolink.expverificationservice.common.event.v1_0.VerificationUpdatedEvent
+import com.briolink.expverificationservice.common.event.v1_0.ExpVerificationChangedStatusEvent
+import com.briolink.expverificationservice.common.event.v1_0.ExpVerificationCreatedEvent
+import com.briolink.expverificationservice.common.event.v1_0.ExpVerificationUpdatedEvent
 import com.briolink.expverificationservice.common.jpa.write.entity.ObjectConfirmTypeWriteEntity
 import com.briolink.expverificationservice.common.jpa.write.entity.VerificationStatusWriteEntity
 import com.briolink.expverificationservice.common.jpa.write.entity.VerificationWriteEntity
@@ -13,6 +17,7 @@ import com.briolink.expverificationservice.common.jpa.write.repository.ObjectCon
 import com.briolink.expverificationservice.common.jpa.write.repository.VerificationStatusWriteRepository
 import com.briolink.expverificationservice.common.jpa.write.repository.VerificationWriteRepository
 import com.briolink.expverificationservice.common.mapper.toDomain
+import com.briolink.expverificationservice.common.mapper.toEnum
 import com.briolink.lib.event.publisher.EventPublisher
 import com.netflix.graphql.dgs.exceptions.DgsEntityNotFoundException
 import mu.KLogging
@@ -39,15 +44,31 @@ abstract class VerificationService() {
         entityManager.getReference(VerificationStatusWriteEntity::class.java, status.value)
 
     private fun publishCreatedEvent(entity: VerificationWriteEntity) {
-        eventPublisher.publish(VerificationCreatedEvent(entity.toDomain()))
+        eventPublisher.publish(ExpVerificationCreatedEvent(entity.toDomain()))
     }
 
     private fun publishUpdatedEvent(entity: VerificationWriteEntity) {
-        eventPublisher.publish(VerificationUpdatedEvent(entity.toDomain()))
+        eventPublisher.publish(ExpVerificationUpdatedEvent(entity.toDomain()))
+    }
+
+    private fun publishChangedStatusEvent(objectConfirmId: UUID, status: VerificationStatusEnum) {
+        eventPublisher.publish(
+            ExpVerificationChangedStatusEvent(
+                ExpVerificationChangeStatusEventData(
+                    objectConfirmId = objectConfirmId,
+                    objectConfirmType = ObjectConfirmType.fromInt(objectTypeVerification.value),
+                    status = ExpVerificationStatus.fromInt(status.value)
+                )
+            )
+        )
     }
 
     private fun getById(id: UUID): VerificationWriteEntity =
         verificationWriteRepository.findById(id).orElseThrow { throw DgsEntityNotFoundException("Verification $id not found") }
+
+    private fun getLastByObjectConfirm(objectId: UUID): VerificationWriteEntity =
+        verificationWriteRepository.findFirstByObjectConfirmIdAndObjectConfirmTypeOrderByChangedDesc(objectId, confirmTypeReference())
+            ?: throw DgsEntityNotFoundException("Verification not found")
 
     fun confirmVerification(id: UUID, byUserId: UUID, actionType: ActionTypeEnum): VerificationWriteEntity {
         return getById(id).apply {
@@ -62,13 +83,43 @@ abstract class VerificationService() {
             this.actionAt = Instant.now()
             this.actionBy = byUserId
         }.let {
+            setVerificationStatusInReadRepository(it.id!!, it.status.toEnum())
             verificationWriteRepository.save(it)
         }.also {
             publishUpdatedEvent(it)
         }
     }
 
+    fun resetObjectVerification(objectId: UUID, overrideStatus: VerificationStatusEnum? = null): VerificationStatusEnum {
+        try {
+            getLastByObjectConfirm(objectId).apply {
+                this.status = overrideStatus?.let { statusReference(it) } ?: statusReference(VerificationStatusEnum.NotConfirmed)
+
+                if (overrideStatus == VerificationStatusEnum.Rejected || overrideStatus == VerificationStatusEnum.Confirmed) {
+                    this.actionAt = Instant.now()
+                    this.actionBy = this.userId
+                } else {
+                    this.actionAt = null
+                    this.actionBy = null
+                }
+
+                this.userToConfirmIds = emptyArray()
+            }.let {
+                setVerificationStatusInReadRepository(it.id!!, it.status.toEnum())
+                verificationWriteRepository.save(it)
+            }.also {
+                publishUpdatedEvent(it)
+                return it.status.toEnum()
+            }
+        } catch (ex: DgsEntityNotFoundException) {
+            logger.warn { "Verification not found for object $objectId : $objectTypeVerification" }
+            publishChangedStatusEvent(objectId, overrideStatus ?: VerificationStatusEnum.NotConfirmed)
+            return overrideStatus ?: VerificationStatusEnum.NotConfirmed
+        }
+    }
+
     abstract fun existObjectIdAndUserIdAndStatus(objectId: UUID, userId: UUID, status: VerificationStatusEnum): Boolean
+    abstract fun setVerificationStatusInReadRepository(verificationId: UUID, status: VerificationStatusEnum): Boolean
 
     fun addVerification(userId: UUID, objectId: UUID, userConfirmIds: List<UUID>): VerificationWriteEntity {
 
@@ -86,7 +137,6 @@ abstract class VerificationService() {
         }.let {
             verificationWriteRepository.save(it)
         }.also {
-            logger.info { "Saved verification $it" }
             publishCreatedEvent(it)
         }
         return verification

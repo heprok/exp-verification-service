@@ -126,4 +126,8 @@ interface EducationVerificationReadRepository : JpaRepository<EducationVerificat
         @Param("status") status: Int = VerificationStatusEnum.Pending.value,
         pageable: Pageable = Pageable.ofSize(10)
     ): List<BaseSuggestion>
+
+    @Modifying
+    @Query("update EducationVerificationReadEntity u set u._status = ?2 where u.id = ?1")
+    fun updateStatusById(id: UUID, status: Int): Int
 }

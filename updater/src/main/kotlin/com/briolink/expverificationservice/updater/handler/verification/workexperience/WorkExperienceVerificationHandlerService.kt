@@ -1,7 +1,7 @@
 package com.briolink.expverificationservice.updater.handler.verification.workexperience
 
+import com.briolink.expverificationservice.common.domain.v1_0.ExpVerification
 import com.briolink.expverificationservice.common.domain.v1_0.ObjectConfirmType
-import com.briolink.expverificationservice.common.domain.v1_0.Verification
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.expverificationservice.common.jpa.read.entity.CompanyReadEntity
 import com.briolink.expverificationservice.common.jpa.read.entity.UserJobPositionReadEntity
@@ -22,7 +22,7 @@ class WorkExperienceVerificationHandlerService(
     private val workExperienceVerificationReadRepository: WorkExperienceVerificationReadRepository,
 
 ) {
-    fun createOrUpdate(domain: Verification): WorkExperienceVerificationReadEntity {
+    fun createOrUpdate(domain: ExpVerification): WorkExperienceVerificationReadEntity {
         if (domain.objectConfirmType != ObjectConfirmType.WorkExperience)
             throw IllegalArgumentException("ObjectConfirmType is not WorkExperience")
 
@@ -77,8 +77,8 @@ class WorkExperienceVerificationHandlerService(
         workExperienceVerificationReadRepository.updateJobPosition(
             userJobPositionId = jobPosition.id,
             title = jobPosition.data.title,
-            startDate = jobPosition.data.startDate,
-            endDate = jobPosition.data.endDate,
+            startDate = jobPosition.data.startDate.toString(),
+            endDate = jobPosition.data.endDate?.toString(),
         )
     }
 }

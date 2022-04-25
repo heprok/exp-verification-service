@@ -1,7 +1,7 @@
 package com.briolink.expverificationservice.updater.dataloader
 
 import com.briolink.expverificationservice.common.dataloader.DataLoader
-import com.briolink.expverificationservice.common.domain.v1_0.VerificationStatus
+import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserJobPositionReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
@@ -51,7 +51,7 @@ class UserJobPositionDataLoader(
                         title = jobPositionTitles.random(),
                         userId = users.random().id
                     ),
-                    VerificationStatus.values().random()
+                    ExpVerificationStatus.values().random()
                 )
             }
         }
