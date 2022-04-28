@@ -6,7 +6,10 @@ import java.time.Instant
 import java.util.UUID
 
 enum class ObjectConfirmType(@JsonValue val value: Int) {
+    @JsonProperty("1")
     WorkExperience(1),
+
+    @JsonProperty("2")
     Education(2);
 
     companion object {
@@ -16,9 +19,16 @@ enum class ObjectConfirmType(@JsonValue val value: Int) {
 }
 
 enum class ExpVerificationStatus(@JsonValue val value: Int) {
+    @JsonProperty("1")
     NotConfirmed(1),
+
+    @JsonProperty("2")
     Pending(2),
+
+    @JsonProperty("3")
     Confirmed(3),
+
+    @JsonProperty("4")
     Rejected(4);
 
     companion object {
