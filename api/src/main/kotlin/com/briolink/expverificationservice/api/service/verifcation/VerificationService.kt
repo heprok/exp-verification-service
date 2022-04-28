@@ -70,9 +70,16 @@ abstract class VerificationService() {
         verificationWriteRepository.findFirstByObjectConfirmIdAndObjectConfirmTypeOrderByChangedDesc(objectId, confirmTypeReference())
             ?: throw DgsEntityNotFoundException("Verification not found")
 
-    fun confirmVerification(id: UUID, byUserId: UUID, actionType: ActionTypeEnum): VerificationWriteEntity {
+    fun confirmVerification(
+        id: UUID,
+        byUserId: UUID,
+        actionType: ActionTypeEnum,
+        overrideAction: Boolean = false
+    ): VerificationWriteEntity {
         return getById(id).apply {
-            if (!this.userToConfirmIds.contains(byUserId)) throw UserErrorGraphQlException("User is not in the list of users to confirm")
+            if (!overrideAction && !this.userToConfirmIds.contains(byUserId))
+                throw UserErrorGraphQlException("User is not in the list of users to confirm")
+
             if (this.actionAt != null) throw UserErrorGraphQlException("Verification is already done")
 
             this.status = when (actionType) {

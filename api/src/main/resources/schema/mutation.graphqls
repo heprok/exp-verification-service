@@ -1,9 +1,9 @@
 type Mutation {
     # Verification
-    confirmVerification(id: ID!, action: VerificationConfirmAction!) : ConfirmVerificationResult!
+    confirmVerification(id: ID!, type: ObjectConfirmType!,  action: VerificationConfirmAction!) : ConfirmVerificationResult!
 
     # Private methods
     verificationRequest(byUserId: ID!, objectKey: ObjectKey!, usersToConfirmIds: [ID!]!): VerificationRequestResult!
-
+    confirmWorkExpVerificationByCompany(id: ID!, byUserId: ID!, action: VerificationConfirmAction!): ConfirmVerificationResult!
     resetVerification(objectKey: ObjectKey!, overrideStatus: VerificationStatus): ResetVerificationResult!
 }

@@ -69,19 +69,74 @@ class VerificationMutation(
     @PreAuthorize("isAuthenticated()")
     fun confirmVerification(
         @InputArgument id: String,
+        @InputArgument type: ObjectConfirmType,
+        @InputArgument action: VerificationConfirmAction,
+    ): ConfirmVerificationResult {
+        return try {
+            when (action) {
+                VerificationConfirmAction.Confirm -> when (type) {
+                    ObjectConfirmType.WorkExperience -> workExperienceVerificationService.confirmVerification(
+                        id = UUID.fromString(id),
+                        byUserId = SecurityUtil.currentUserId,
+                        actionType = ActionTypeEnum.Confirmed
+                    )
+                    ObjectConfirmType.Education -> educationVerificationService.confirmVerification(
+                        id = UUID.fromString(id),
+                        byUserId = SecurityUtil.currentUserId,
+                        actionType = ActionTypeEnum.Confirmed
+                    )
+                }
+                VerificationConfirmAction.Reject -> when (type) {
+                    ObjectConfirmType.WorkExperience -> workExperienceVerificationService.confirmVerification(
+                        id = UUID.fromString(id),
+                        byUserId = SecurityUtil.currentUserId,
+                        actionType = ActionTypeEnum.Rejected
+                    )
+                    ObjectConfirmType.Education -> educationVerificationService.confirmVerification(
+                        id = UUID.fromString(id),
+                        byUserId = SecurityUtil.currentUserId,
+                        actionType = ActionTypeEnum.Rejected
+                    )
+                }
+            }
+
+            ConfirmVerificationResult(
+                success = true,
+                userErrors = listOf()
+            )
+        } catch (ex: UserErrorGraphQlException) {
+            ConfirmVerificationResult(
+                success = false,
+                userErrors = listOf(Error(ex.message))
+            )
+        } catch (ex: DgsEntityNotFoundException) {
+            ConfirmVerificationResult(
+                success = false,
+                userErrors = listOf(Error(ex.message))
+            )
+        }
+    }
+
+    @DgsMutation
+    // @PreAuthorize("@servletUtil.isIntranet()")
+    fun confirmWorkExpVerificationByCompany(
+        @InputArgument id: String,
+        @InputArgument byUserId: String,
         @InputArgument action: VerificationConfirmAction,
     ): ConfirmVerificationResult {
         return try {
             when (action) {
                 VerificationConfirmAction.Confirm -> workExperienceVerificationService.confirmVerification(
                     id = UUID.fromString(id),
-                    byUserId = SecurityUtil.currentUserId,
-                    actionType = ActionTypeEnum.Confirmed
+                    byUserId = UUID.fromString(byUserId),
+                    actionType = ActionTypeEnum.Confirmed,
+                    overrideAction = true
                 )
                 VerificationConfirmAction.Reject -> workExperienceVerificationService.confirmVerification(
                     id = UUID.fromString(id),
-                    byUserId = SecurityUtil.currentUserId,
-                    actionType = ActionTypeEnum.Rejected
+                    byUserId = UUID.fromString(byUserId),
+                    actionType = ActionTypeEnum.Rejected,
+                    overrideAction = true
                 )
             }
 
