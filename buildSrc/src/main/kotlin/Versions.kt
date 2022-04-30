@@ -10,7 +10,7 @@ object Versions {
 
     object Briolink {
         const val EVENT = "0.4.0-SNAPSHOT"
-        const val SYNC = "0.2.0-SNAPSHOT"
+        const val SYNC = "0.2.1-SNAPSHOT"
     }
 
     object Plugin {

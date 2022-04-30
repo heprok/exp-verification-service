@@ -1,12 +1,8 @@
 package com.briolink.expverificationservice.updater.handler.verification
 
 import com.briolink.expverificationservice.common.domain.v1_0.ObjectConfirmType
-import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
-import com.briolink.expverificationservice.common.event.v1_0.ExpVerificationChangedStatusEvent
 import com.briolink.expverificationservice.common.event.v1_0.ExpVerificationCreatedEvent
 import com.briolink.expverificationservice.common.event.v1_0.ExpVerificationSyncEvent
-import com.briolink.expverificationservice.updater.handler.usereducation.UserEducationHandlerService
-import com.briolink.expverificationservice.updater.handler.userjobposition.UserJobPositionHandlerService
 import com.briolink.expverificationservice.updater.handler.verification.education.EducationVerificationHandlerService
 import com.briolink.expverificationservice.updater.handler.verification.workexperience.WorkExperienceVerificationHandlerService
 import com.briolink.expverificationservice.updater.service.SyncService
@@ -39,7 +35,7 @@ class ExpVerificationSyncEventHandler(
     private val educationVerificationHandlerService: EducationVerificationHandlerService,
     private val workExperienceVerificationHandlerService: WorkExperienceVerificationHandlerService,
     syncService: SyncService,
-) : SyncEventHandler<ExpVerificationSyncEvent>(ObjectSyncEnum.UserJobPosition, syncService) { // TODO: add ObjectSync verification
+) : SyncEventHandler<ExpVerificationSyncEvent>(ObjectSyncEnum.ExpVerification, syncService) {
     override fun handle(event: ExpVerificationSyncEvent) {
         val syncData = event.data
         if (!objectSyncStarted(syncData)) return
@@ -56,21 +52,21 @@ class ExpVerificationSyncEventHandler(
     }
 }
 
-@EventHandler("ExpVerificationChangedStatusEvent", "1.0")
-class ExpVerificationChangeStatusEventHandler(
-    private val userEducationHandlerService: UserEducationHandlerService,
-    private val userJobPositionHandlerService: UserJobPositionHandlerService,
-) : IEventHandler<ExpVerificationChangedStatusEvent> {
-    override fun handle(event: ExpVerificationChangedStatusEvent) {
-        when (event.data.objectConfirmType) {
-            ObjectConfirmType.Education -> userEducationHandlerService.updateStatus(
-                event.data.objectConfirmId,
-                VerificationStatusEnum.ofValue(event.data.status.value)
-            )
-            ObjectConfirmType.WorkExperience -> userJobPositionHandlerService.updateStatus(
-                event.data.objectConfirmId,
-                VerificationStatusEnum.ofValue(event.data.status.value)
-            )
-        }
-    }
-}
+// @EventHandler("ExpVerificationChangedStatusEvent", "1.0")
+// class ExpVerificationChangeStatusEventHandler(
+//     private val userEducationHandlerService: UserEducationHandlerService,
+//     private val userJobPositionHandlerService: UserJobPositionHandlerService,
+// ) : IEventHandler<ExpVerificationChangedStatusEvent> {
+//     override fun handle(event: ExpVerificationChangedStatusEvent) {
+//         when (event.data.objectConfirmType) {
+//             ObjectConfirmType.Education -> userEducationHandlerService.updateStatus(
+//                 event.data.objectConfirmId,
+//                 VerificationStatusEnum.ofValue(event.data.status.value)
+//             )
+//             ObjectConfirmType.WorkExperience -> userJobPositionHandlerService.updateStatus(
+//                 event.data.objectConfirmId,
+//                 VerificationStatusEnum.ofValue(event.data.status.value)
+//             )
+//         }
+//     }
+// }

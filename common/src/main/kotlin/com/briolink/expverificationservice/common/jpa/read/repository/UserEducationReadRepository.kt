@@ -37,4 +37,7 @@ interface UserEducationReadRepository : JpaRepository<UserEducationReadEntity, U
 
     @Query("select (count(u) > 0) from UserEducationReadEntity u where u.id = ?1 and u.userId = ?2 and u._status = ?3")
     fun existByIdAndUserAndStatus(id: UUID, userId: UUID, status: Int): Boolean
+
+    @Query("select u.userId from UserEducationReadEntity u where u.id = ?1")
+    fun getUserIdById(id: UUID): UUID?
 }

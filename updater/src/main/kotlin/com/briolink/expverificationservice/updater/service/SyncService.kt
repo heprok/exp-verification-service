@@ -16,7 +16,7 @@ class SyncService(
     override val syncWebClient: SyncWebClient,
     override val syncLogRepository: SyncLogReadRepository
 ) : BaseSyncService() {
-    override val CURRENT_UPDATER: UpdaterEnum = UpdaterEnum.Connection
+    override val CURRENT_UPDATER: UpdaterEnum = UpdaterEnum.ExpVerification
     override fun getListSyncLogIdAtCompany(syncId: Int): List<SyncLogId> {
         val listSyncLogId =
             listOf(
@@ -42,6 +42,11 @@ class SyncService(
                     this._service = ServiceEnum.User.id
                     this._objectSync = ObjectSyncEnum.UserJobPosition.value
                 },
+                SyncLogId().apply {
+                    this.syncId = syncId
+                    this._service = ServiceEnum.User.id
+                    this._objectSync = ObjectSyncEnum.UserEducation.value
+                },
             )
         return listSyncLogId
     }
@@ -52,5 +57,18 @@ class SyncService(
 
     override fun getListSyncLogIdAtCompanyService(syncId: Int): List<SyncLogId> {
         return listOf()
+    }
+
+    override fun getListSyncLogIdAtExpVerification(syncId: Int): List<SyncLogId> {
+        val listSyncLogId =
+            listOf(
+                SyncLogId().apply {
+                    this.syncId = syncId
+                    this._service = ServiceEnum.ExpVerification.id
+                    this._objectSync = ObjectSyncEnum.ExpVerification.value
+                },
+            )
+
+        return listSyncLogId
     }
 }

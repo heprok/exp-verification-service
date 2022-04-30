@@ -1,5 +1,7 @@
 package com.briolink.expverificationservice.api.rest
 
+import com.briolink.expverificationservice.api.service.verifcation.education.EducationVerificationService
+import com.briolink.expverificationservice.api.service.verifcation.workexperince.WorkExperienceVerificationService
 import com.briolink.lib.sync.AbstractSyncController
 import com.briolink.lib.sync.model.PeriodDateTime
 import org.springframework.http.ResponseEntity
@@ -12,7 +14,10 @@ import javax.validation.constraints.NotNull
 
 @RestController
 @RequestMapping("/api/v1")
-class SyncController() : AbstractSyncController() {
+class SyncController(
+    private val educationVerificationService: EducationVerificationService,
+    private val workExperienceVerificationService: WorkExperienceVerificationService,
+) : AbstractSyncController() {
     @PostMapping("sync")
     @Async
     // @PreAuthorize("@servletUtil.isIntranet()")
@@ -25,7 +30,7 @@ class SyncController() : AbstractSyncController() {
     }
 
     override fun publishSyncEvent(syncId: Int, period: PeriodDateTime?) {
-        // projectService.publishSyncEvent(syncId, period)
-        // projectService.syncReadProjectFromWrite(period)
+        educationVerificationService.publishSyncEvent(syncId, period)
+        workExperienceVerificationService.publishSyncEvent(syncId, period)
     }
 }

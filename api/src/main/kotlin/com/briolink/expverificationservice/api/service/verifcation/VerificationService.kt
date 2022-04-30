@@ -1,14 +1,11 @@
 package com.briolink.expverificationservice.api.service.verifcation
 
 import com.briolink.expverificationservice.api.exception.UserErrorGraphQlException
-import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationChangeStatusEventData
-import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
-import com.briolink.expverificationservice.common.domain.v1_0.ObjectConfirmType
 import com.briolink.expverificationservice.common.enumeration.ActionTypeEnum
 import com.briolink.expverificationservice.common.enumeration.ObjectConfirmTypeEnum
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
-import com.briolink.expverificationservice.common.event.v1_0.ExpVerificationChangedStatusEvent
 import com.briolink.expverificationservice.common.event.v1_0.ExpVerificationCreatedEvent
+import com.briolink.expverificationservice.common.event.v1_0.ExpVerificationSyncEvent
 import com.briolink.expverificationservice.common.event.v1_0.ExpVerificationUpdatedEvent
 import com.briolink.expverificationservice.common.jpa.write.entity.ObjectConfirmTypeWriteEntity
 import com.briolink.expverificationservice.common.jpa.write.entity.VerificationStatusWriteEntity
@@ -19,9 +16,14 @@ import com.briolink.expverificationservice.common.jpa.write.repository.Verificat
 import com.briolink.expverificationservice.common.mapper.toDomain
 import com.briolink.expverificationservice.common.mapper.toEnum
 import com.briolink.lib.event.publisher.EventPublisher
+import com.briolink.lib.sync.SyncData
+import com.briolink.lib.sync.SyncUtil
+import com.briolink.lib.sync.enumeration.ServiceEnum
+import com.briolink.lib.sync.model.PeriodDateTime
 import com.netflix.graphql.dgs.exceptions.DgsEntityNotFoundException
 import mu.KLogging
 import java.time.Instant
+import java.util.Optional
 import java.util.UUID
 import javax.persistence.EntityManager
 
@@ -31,7 +33,12 @@ abstract class VerificationService() {
     protected abstract val verificationWriteRepository: VerificationWriteRepository
     protected abstract val objectConfirmTypeWriteRepository: ObjectConfirmTypeWriteRepository
     protected abstract val verificationStatusWriteRepository: VerificationStatusWriteRepository
+
     abstract val objectTypeVerification: ObjectConfirmTypeEnum
+
+    abstract fun existObjectIdAndUserIdAndStatus(objectId: UUID, userId: UUID, status: VerificationStatusEnum): Boolean
+    abstract fun setVerificationStatusInReadRepository(verificationId: UUID, status: VerificationStatusEnum): Boolean
+    abstract fun getUserIdByObjectId(objectId: UUID): UUID
 
     companion object : KLogging()
 
@@ -51,24 +58,23 @@ abstract class VerificationService() {
         eventPublisher.publish(ExpVerificationUpdatedEvent(entity.toDomain()))
     }
 
-    private fun publishChangedStatusEvent(objectConfirmId: UUID, status: VerificationStatusEnum) {
-        eventPublisher.publish(
-            ExpVerificationChangedStatusEvent(
-                ExpVerificationChangeStatusEventData(
-                    objectConfirmId = objectConfirmId,
-                    objectConfirmType = ObjectConfirmType.fromInt(objectTypeVerification.value),
-                    status = ExpVerificationStatus.fromInt(status.value)
-                )
-            )
-        )
-    }
+    // private fun publishChangedStatusEvent(objectConfirmId: UUID, status: VerificationStatusEnum) {
+    //     eventPublisher.publish(
+    //         ExpVerificationChangedStatusEvent(
+    //             ExpVerificationChangeStatusEventData(
+    //                 objectConfirmId = objectConfirmId,
+    //                 objectConfirmType = ObjectConfirmType.fromInt(objectTypeVerification.value),
+    //                 status = ExpVerificationStatus.fromInt(status.value)
+    //             )
+    //         )
+    //     )
+    // }
 
     private fun getById(id: UUID): VerificationWriteEntity =
         verificationWriteRepository.findById(id).orElseThrow { throw DgsEntityNotFoundException("Verification $id not found") }
 
-    private fun getLastByObjectConfirm(objectId: UUID): VerificationWriteEntity =
+    private fun getLastByObjectConfirmOrCreate(objectId: UUID): Optional<VerificationWriteEntity> =
         verificationWriteRepository.findFirstByObjectConfirmIdAndObjectConfirmTypeOrderByChangedDesc(objectId, confirmTypeReference())
-            ?: throw DgsEntityNotFoundException("Verification not found")
 
     fun confirmVerification(
         id: UUID,
@@ -98,35 +104,43 @@ abstract class VerificationService() {
     }
 
     fun resetObjectVerification(objectId: UUID, overrideStatus: VerificationStatusEnum? = null): VerificationStatusEnum {
-        try {
-            getLastByObjectConfirm(objectId).apply {
-                this.status = overrideStatus?.let { statusReference(it) } ?: statusReference(VerificationStatusEnum.NotConfirmed)
+        val optVerification = getLastByObjectConfirmOrCreate(objectId)
+        val isNew = optVerification.isEmpty
 
-                if (overrideStatus == VerificationStatusEnum.Rejected || overrideStatus == VerificationStatusEnum.Confirmed) {
-                    this.actionAt = Instant.now()
-                    this.actionBy = this.userId
-                } else {
-                    this.actionAt = null
-                    this.actionBy = null
-                }
-
-                this.userToConfirmIds = emptyArray()
-            }.let {
-                setVerificationStatusInReadRepository(it.id!!, it.status.toEnum())
-                verificationWriteRepository.save(it)
-            }.also {
-                publishUpdatedEvent(it)
-                return it.status.toEnum()
+        val verification = optVerification.orElse(
+            VerificationWriteEntity().apply {
+                this.objectConfirmId = objectId
+                this.objectConfirmType = confirmTypeReference()
+                this.status = statusReference(VerificationStatusEnum.NotConfirmed)
             }
-        } catch (ex: DgsEntityNotFoundException) {
-            logger.warn { "Verification not found for object $objectId : $objectTypeVerification" }
-            publishChangedStatusEvent(objectId, overrideStatus ?: VerificationStatusEnum.NotConfirmed)
-            return overrideStatus ?: VerificationStatusEnum.NotConfirmed
+        )
+
+        verification.apply {
+            this.status = overrideStatus?.let { statusReference(it) } ?: statusReference(VerificationStatusEnum.NotConfirmed)
+
+            if (overrideStatus == VerificationStatusEnum.Rejected || overrideStatus == VerificationStatusEnum.Confirmed) {
+                this.actionAt = Instant.now()
+                this.actionBy = this.userId
+            } else {
+                this.actionAt = null
+                this.actionBy = null
+            }
+
+            this.userToConfirmIds = emptyArray()
+        }.let {
+            setVerificationStatusInReadRepository(it.id!!, it.status.toEnum())
+            verificationWriteRepository.save(it)
+        }.also {
+            if (isNew)
+                publishCreatedEvent(it)
+            else {
+                logger.warn { "Verification not found for object $objectId : $objectTypeVerification" }
+                publishUpdatedEvent(it)
+            }
+
+            return it.status.toEnum()
         }
     }
-
-    abstract fun existObjectIdAndUserIdAndStatus(objectId: UUID, userId: UUID, status: VerificationStatusEnum): Boolean
-    abstract fun setVerificationStatusInReadRepository(verificationId: UUID, status: VerificationStatusEnum): Boolean
 
     fun addVerification(userId: UUID, objectId: UUID, userConfirmIds: List<UUID>): VerificationWriteEntity {
 
@@ -147,5 +161,33 @@ abstract class VerificationService() {
             publishCreatedEvent(it)
         }
         return verification
+    }
+
+    private fun publishExpVerificationSyncEvent(
+        syncId: Int,
+        objectIndex: Long,
+        totalObjects: Long,
+        entity: VerificationWriteEntity?
+    ) {
+        eventPublisher.publishAsync(
+            ExpVerificationSyncEvent(
+                SyncData(
+                    service = ServiceEnum.ExpVerification,
+                    syncId = syncId,
+                    objectIndex = objectIndex,
+                    totalObjects = totalObjects,
+                    objectSync = entity?.toDomain()
+                )
+            )
+        )
+    }
+
+    fun publishSyncEvent(syncId: Int, period: PeriodDateTime? = null) {
+        SyncUtil.publishSyncEvent(period, verificationWriteRepository) { indexElement, totalElements, entity ->
+            publishExpVerificationSyncEvent(
+                syncId, indexElement, totalElements,
+                entity as VerificationWriteEntity?,
+            )
+        }
     }
 }

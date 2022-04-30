@@ -36,7 +36,6 @@ class UniversitySyncEventHandler(
     private val universityHandlerService: UniversityHandlerService,
     private val userEducationHandlerService: UserEducationHandlerService,
     private val educationVerificationHandlerService: EducationVerificationHandlerService,
-
     syncService: SyncService,
 ) : SyncEventHandler<UniversitySyncEvent>(ObjectSyncEnum.University, syncService) {
     override fun handle(event: UniversitySyncEvent) {

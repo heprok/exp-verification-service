@@ -98,9 +98,7 @@ subprojects {
         mavenLocal()
         // Internal GitLab library IDs
         setOf(
-            32844103, // BL Permission
             29889174, // BL Event
-            33422039, // BL Location
             33688770, // BL Sync
         ).forEach {
             maven {
