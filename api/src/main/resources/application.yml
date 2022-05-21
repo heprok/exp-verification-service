@@ -29,7 +29,7 @@ spring:
         types:
           print:
             banner: false
-        metadata_builder_contributor: com.briolink.expverificationservice.common.jpa.Functions
+        metadata_builder_contributor: com.briolink.lib.common.jpa.Functions
     generate-ddl: false
     show-sql: false
     open-in-view: false

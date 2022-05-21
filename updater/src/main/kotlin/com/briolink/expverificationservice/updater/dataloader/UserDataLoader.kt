@@ -1,9 +1,9 @@
 package com.briolink.expverificationservice.updater.dataloader
 
-import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
 import com.briolink.expverificationservice.updater.handler.user.UserEventData
 import com.briolink.expverificationservice.updater.handler.user.UserHandlerService
+import com.briolink.lib.common.utils.BlDataLoader
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.net.URL
@@ -16,7 +16,12 @@ class UserDataLoader(
     private var userReadRepository: UserReadRepository,
     private var userHandlerService: UserHandlerService
 
-) : DataLoader() {
+) : BlDataLoader() {
+
+    companion object {
+        const val COUNT_USER = 10
+    }
+
     val listFirstName: List<String> = listOf(
         "Lynch", "Kennedy", "Williams", "Evans", "Jones", "Burton", "Miller", "Smith", "Nelson", "Lucas",
     )

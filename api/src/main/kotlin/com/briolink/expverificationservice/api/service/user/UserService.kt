@@ -1,8 +1,8 @@
 package com.briolink.expverificationservice.api.service.user
 
-import com.briolink.expverificationservice.api.exception.UnavailableException
 import com.briolink.expverificationservice.common.jpa.read.entity.UserReadEntity
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
+import com.briolink.lib.common.exception.UnavailableException
 import com.netflix.graphql.dgs.client.MonoGraphQLClient
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
@@ -37,12 +37,16 @@ class UserService(
                 "companyId" to companyId.toString(),
                 "title" to title,
             ),
-        ).block() ?: throw UnavailableException("Unavailable user service")
+        ).block() ?: throw UnavailableException(SERVICE_NAME)
 
         return try {
             result.extractValue("createUserJobPositionIfNotExist.success")
         } catch (e: Exception) {
-            throw UnavailableException("Unavailable user service")
+            throw UnavailableException(SERVICE_NAME)
         }
+    }
+
+    companion object {
+        const val SERVICE_NAME = "User"
     }
 }

@@ -1,6 +1,5 @@
 package com.briolink.expverificationservice.api.service.verifcation
 
-import com.briolink.expverificationservice.api.exception.UserErrorGraphQlException
 import com.briolink.expverificationservice.common.enumeration.ActionTypeEnum
 import com.briolink.expverificationservice.common.enumeration.ObjectConfirmTypeEnum
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
@@ -15,6 +14,7 @@ import com.briolink.expverificationservice.common.jpa.write.repository.Verificat
 import com.briolink.expverificationservice.common.jpa.write.repository.VerificationWriteRepository
 import com.briolink.expverificationservice.common.mapper.toDomain
 import com.briolink.expverificationservice.common.mapper.toEnum
+import com.briolink.lib.common.exception.ValidationException
 import com.briolink.lib.event.publisher.EventPublisher
 import com.briolink.lib.sync.SyncData
 import com.briolink.lib.sync.SyncUtil
@@ -70,12 +70,26 @@ abstract class VerificationService() {
     //     )
     // }
 
+    /**
+     * Get by id verification write entity
+     *
+     * @throws DgsEntityNotFoundException if entity not found
+     *
+     * @return VerificationWriteEntity
+     */
     private fun getById(id: UUID): VerificationWriteEntity =
         verificationWriteRepository.findById(id).orElseThrow { throw DgsEntityNotFoundException("Verification $id not found") }
 
     private fun getLastByObjectConfirmOrCreate(objectId: UUID): Optional<VerificationWriteEntity> =
         verificationWriteRepository.findFirstByObjectConfirmIdAndObjectConfirmTypeOrderByChangedDesc(objectId, confirmTypeReference())
 
+    /**
+     * Confirm verification
+     *
+     * @throws ValidationException
+     * @return VerificationWriteEntity
+     */
+    @Throws(ValidationException::class)
     fun confirmVerification(
         id: UUID,
         byUserId: UUID,
@@ -84,9 +98,9 @@ abstract class VerificationService() {
     ): VerificationWriteEntity {
         return getById(id).apply {
             if (!overrideAction && !this.userToConfirmIds.contains(byUserId))
-                throw UserErrorGraphQlException("User is not in the list of users to confirm")
+                throw ValidationException("User is not in the list of users to confirm")
 
-            if (this.actionAt != null) throw UserErrorGraphQlException("Verification is already done")
+            if (this.actionAt != null) throw ValidationException("Verification is already done")
 
             this.status = when (actionType) {
                 ActionTypeEnum.Confirmed -> statusReference(VerificationStatusEnum.Confirmed)
@@ -142,12 +156,21 @@ abstract class VerificationService() {
         }
     }
 
+    /**
+     * Create verification
+     *
+     * @throws ValidationException
+     * @throws DgsEntityNotFoundException
+     *
+     * @return VerificationWriteEntity
+     */
+    @Throws(ValidationException::class, DgsEntityNotFoundException::class)
     fun addVerification(userId: UUID, objectId: UUID, userConfirmIds: List<UUID>): VerificationWriteEntity {
 
-        if (userConfirmIds.contains(userId)) throw UserErrorGraphQlException("User can't confirm himself")
+        if (userConfirmIds.contains(userId)) throw ValidationException("User can't confirm himself")
 
         if (!existObjectIdAndUserIdAndStatus(objectId, userId, VerificationStatusEnum.NotConfirmed))
-            throw UserErrorGraphQlException("Not confirmed ${objectTypeVerification.name} $objectId and user $userId not found")
+            throw DgsEntityNotFoundException("Not confirmed ${objectTypeVerification.name} $objectId and user $userId not found")
 
         val verification = VerificationWriteEntity().apply {
             this.userId = userId

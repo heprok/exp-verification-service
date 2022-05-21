@@ -1,9 +1,9 @@
 package com.briolink.expverificationservice.updater.dataloader
 
-import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.jpa.read.repository.UniversityReadRepository
 import com.briolink.expverificationservice.updater.handler.university.UniversityEventData
 import com.briolink.expverificationservice.updater.handler.university.UniversityHandlerService
+import com.briolink.lib.common.utils.BlDataLoader
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.net.URL
@@ -16,7 +16,12 @@ class UniversityDataLoader(
     private var universityReadRepository: UniversityReadRepository,
     private var universityHandlerService: UniversityHandlerService
 
-) : DataLoader() {
+) : BlDataLoader() {
+
+    companion object {
+        const val COUNT_UNIVERSITY = 100
+    }
+
     val universityNames: List<String> = listOf(
         "Stanford University", "Oxford", "Massachusetts Institute of Technology,", "University of Cambridge",
     )

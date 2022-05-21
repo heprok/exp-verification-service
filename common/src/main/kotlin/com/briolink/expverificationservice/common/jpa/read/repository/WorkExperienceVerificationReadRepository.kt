@@ -2,7 +2,7 @@ package com.briolink.expverificationservice.common.jpa.read.repository
 
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.expverificationservice.common.jpa.read.entity.verification.WorkExperienceVerificationReadEntity
-import com.briolink.expverificationservice.common.types.BaseSuggestion
+import com.briolink.lib.common.type.basic.BlSuggestion
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
@@ -94,7 +94,7 @@ interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienc
         @Param("query") query: String? = null,
         @Param("status") status: Int = VerificationStatusEnum.Pending.value,
         pageable: Pageable = Pageable.ofSize(10)
-    ): List<BaseSuggestion>
+    ): List<BlSuggestion>
 
     @Query(
         """
@@ -110,7 +110,7 @@ interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienc
         @Param("query") query: String? = null,
         @Param("status") status: Int = VerificationStatusEnum.Pending.value,
         pageable: Pageable = Pageable.ofSize(10)
-    ): List<BaseSuggestion>
+    ): List<BlSuggestion>
 
     @Query(
         """
@@ -126,7 +126,7 @@ interface WorkExperienceVerificationReadRepository : JpaRepository<WorkExperienc
         @Param("query") query: String? = null,
         @Param("status") status: Int = VerificationStatusEnum.Pending.value,
         pageable: Pageable = Pageable.ofSize(10)
-    ): List<BaseSuggestion>
+    ): List<BlSuggestion>
 
     @Modifying
     @Query("update WorkExperienceVerificationReadEntity u set u._status = ?2 where u.id = ?1")

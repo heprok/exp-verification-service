@@ -2,7 +2,7 @@ package com.briolink.expverificationservice.common.jpa.read.repository
 
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.expverificationservice.common.jpa.read.entity.verification.EducationVerificationReadEntity
-import com.briolink.expverificationservice.common.types.BaseSuggestion
+import com.briolink.lib.common.type.basic.BlSuggestion
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
@@ -93,7 +93,7 @@ interface EducationVerificationReadRepository : JpaRepository<EducationVerificat
         @Param("query") query: String? = null,
         @Param("status") status: Int = VerificationStatusEnum.Pending.value,
         pageable: Pageable = Pageable.ofSize(10)
-    ): List<BaseSuggestion>
+    ): List<BlSuggestion>
 
     @Query(
         """
@@ -109,7 +109,7 @@ interface EducationVerificationReadRepository : JpaRepository<EducationVerificat
         @Param("query") query: String? = null,
         @Param("status") status: Int = VerificationStatusEnum.Pending.value,
         pageable: Pageable = Pageable.ofSize(10)
-    ): List<BaseSuggestion>
+    ): List<BlSuggestion>
 
     @Query(
         """
@@ -125,7 +125,7 @@ interface EducationVerificationReadRepository : JpaRepository<EducationVerificat
         @Param("query") query: String? = null,
         @Param("status") status: Int = VerificationStatusEnum.Pending.value,
         pageable: Pageable = Pageable.ofSize(10)
-    ): List<BaseSuggestion>
+    ): List<BlSuggestion>
 
     @Modifying
     @Query("update EducationVerificationReadEntity u set u._status = ?2 where u.id = ?1")

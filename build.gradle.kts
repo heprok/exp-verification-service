@@ -29,6 +29,7 @@ allprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
     }
 
     group = Base.GROUP
@@ -100,6 +101,7 @@ subprojects {
         setOf(
             29889174, // BL Event
             33688770, // BL Sync
+            36319712, // BL Common
         ).forEach {
             maven {
                 url = uri("https://gitlab.com/api/v4/projects/$it/packages/maven")
@@ -124,6 +126,7 @@ subprojects {
     dependencies {
         implementation("com.briolink.lib:event:${Versions.Briolink.EVENT}")
         implementation("com.briolink.lib:sync:${Versions.Briolink.SYNC}")
+        implementation("com.briolink.lib:common:${Versions.Briolink.COMMON}")
         implementation("me.paulschwarz:spring-dotenv:${Versions.Spring.DOTENV}")
     }
 }
