@@ -1,13 +1,13 @@
 package com.briolink.expverificationservice.api.dataloader
 
 import com.briolink.expverificationservice.api.service.verifcation.education.EducationVerificationService
-import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.entity.UserEducationReadEntity
 import com.briolink.expverificationservice.common.jpa.read.repository.EducationVerificationReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UniversityReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserEducationReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
+import com.briolink.lib.common.utils.BlDataLoader
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import kotlin.random.Random
@@ -20,7 +20,11 @@ class EducationVerificationDataLoader(
     private var userReadRepository: UserReadRepository,
     private val userEducationReadRepository: UserEducationReadRepository,
     private val educationVerificationService: EducationVerificationService
-) : DataLoader() {
+) : BlDataLoader() {
+
+    companion object {
+        const val COUNT_EDUCATION_VERIFICATION = 20
+    }
 
     override fun loadData() {
         if (educationVerificationReadRepository.count().toInt() == 0 &&

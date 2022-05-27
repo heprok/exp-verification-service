@@ -6,9 +6,9 @@ import com.blazebit.persistence.ParameterHolder
 import com.blazebit.persistence.WhereBuilder
 import com.briolink.expverificationservice.api.service.verifcation.dto.TabVerificationEnum
 import com.briolink.expverificationservice.api.service.verifcation.dto.VerificationCountItem
-import com.briolink.expverificationservice.api.util.SecurityUtil
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
 import com.briolink.expverificationservice.common.jpa.read.entity.verification.BaseVerificationReadEntity
+import com.briolink.lib.common.utils.BlSecurityUtils
 
 interface VerificationListRequest {
     var offset: Int
@@ -31,7 +31,7 @@ abstract class VerificationListService<A : VerificationListRequest, B : BaseVeri
         return cb
             .where("array_contains_element(userToConfirmIds, :userId)").eq(true)
             .where("_status").eq(VerificationStatusEnum.Pending.value)
-            .setParameter("userId", SecurityUtil.currentUserId)
+            .setParameter("userId", BlSecurityUtils.currentUserId)
     }
 
     abstract fun createCB(): CriteriaBuilder<B>

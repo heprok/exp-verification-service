@@ -1,9 +1,9 @@
 package com.briolink.expverificationservice.updater.dataloader
 
-import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.updater.handler.company.CompanyEventData
 import com.briolink.expverificationservice.updater.handler.company.CompanyHandlerService
+import com.briolink.lib.common.utils.BlDataLoader
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.net.URL
@@ -14,7 +14,11 @@ import java.util.UUID
 class CompanyDataLoader(
     private val companyReadRepository: CompanyReadRepository,
     private val companyHandlerService: CompanyHandlerService
-) : DataLoader() {
+) : BlDataLoader() {
+    companion object {
+        const val COUNT_COMPANY = 10
+    }
+
     override fun loadData() {
         if (companyReadRepository.count().toInt() == 0
         ) {

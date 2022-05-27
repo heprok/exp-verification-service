@@ -1,6 +1,5 @@
 package com.briolink.expverificationservice.api.graphql.mutation
 
-import com.briolink.expverificationservice.api.exception.UserErrorGraphQlException
 import com.briolink.expverificationservice.api.mapper.fromEnum
 import com.briolink.expverificationservice.api.mapper.fromWrite
 import com.briolink.expverificationservice.api.service.verifcation.education.EducationVerificationService
@@ -14,15 +13,16 @@ import com.briolink.expverificationservice.api.types.VerificationConfirmAction
 import com.briolink.expverificationservice.api.types.VerificationCreatedResult
 import com.briolink.expverificationservice.api.types.VerificationRequestResult
 import com.briolink.expverificationservice.api.types.VerificationStatus
-import com.briolink.expverificationservice.api.util.SecurityUtil
 import com.briolink.expverificationservice.common.enumeration.ActionTypeEnum
 import com.briolink.expverificationservice.common.enumeration.VerificationStatusEnum
+import com.briolink.lib.common.utils.BlSecurityUtils
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsMutation
 import com.netflix.graphql.dgs.InputArgument
 import com.netflix.graphql.dgs.exceptions.DgsEntityNotFoundException
 import org.springframework.security.access.prepost.PreAuthorize
 import java.util.UUID
+import javax.xml.bind.ValidationException
 
 @DgsComponent
 class VerificationMutation(
@@ -30,7 +30,7 @@ class VerificationMutation(
     private val educationVerificationService: EducationVerificationService,
 ) {
     @DgsMutation
-    // @PreAuthorize("@servletUtil.isIntranet()")
+    @PreAuthorize("@blServletUtils.isIntranet()")
     fun verificationRequest(
         @InputArgument byUserId: String,
         @InputArgument objectKey: ObjectKey,
@@ -54,9 +54,9 @@ class VerificationMutation(
                     userErrors = listOf()
                 )
             }
-        } catch (ex: UserErrorGraphQlException) {
+        } catch (ex: ValidationException) {
             VerificationRequestResult(
-                userErrors = listOf(Error(ex.message))
+                userErrors = listOf(Error(ex.message ?: ""))
             )
         } catch (ex: DgsEntityNotFoundException) {
             VerificationRequestResult(
@@ -77,24 +77,24 @@ class VerificationMutation(
                 VerificationConfirmAction.Confirm -> when (type) {
                     ObjectConfirmType.WorkExperience -> workExperienceVerificationService.confirmVerification(
                         id = UUID.fromString(id),
-                        byUserId = SecurityUtil.currentUserId,
+                        byUserId = BlSecurityUtils.currentUserId,
                         actionType = ActionTypeEnum.Confirmed
                     )
                     ObjectConfirmType.Education -> educationVerificationService.confirmVerification(
                         id = UUID.fromString(id),
-                        byUserId = SecurityUtil.currentUserId,
+                        byUserId = BlSecurityUtils.currentUserId,
                         actionType = ActionTypeEnum.Confirmed
                     )
                 }
                 VerificationConfirmAction.Reject -> when (type) {
                     ObjectConfirmType.WorkExperience -> workExperienceVerificationService.confirmVerification(
                         id = UUID.fromString(id),
-                        byUserId = SecurityUtil.currentUserId,
+                        byUserId = BlSecurityUtils.currentUserId,
                         actionType = ActionTypeEnum.Rejected
                     )
                     ObjectConfirmType.Education -> educationVerificationService.confirmVerification(
                         id = UUID.fromString(id),
-                        byUserId = SecurityUtil.currentUserId,
+                        byUserId = BlSecurityUtils.currentUserId,
                         actionType = ActionTypeEnum.Rejected
                     )
                 }
@@ -104,10 +104,10 @@ class VerificationMutation(
                 success = true,
                 userErrors = listOf()
             )
-        } catch (ex: UserErrorGraphQlException) {
+        } catch (ex: ValidationException) {
             ConfirmVerificationResult(
                 success = false,
-                userErrors = listOf(Error(ex.message))
+                userErrors = listOf(Error(ex.message ?: ""))
             )
         } catch (ex: DgsEntityNotFoundException) {
             ConfirmVerificationResult(
@@ -118,7 +118,7 @@ class VerificationMutation(
     }
 
     @DgsMutation
-    // @PreAuthorize("@servletUtil.isIntranet()")
+    @PreAuthorize("@blServletUtils.isIntranet()")
     fun confirmWorkExpVerificationByCompany(
         @InputArgument id: String,
         @InputArgument byUserId: String,
@@ -144,10 +144,10 @@ class VerificationMutation(
                 success = true,
                 userErrors = listOf()
             )
-        } catch (ex: UserErrorGraphQlException) {
+        } catch (ex: ValidationException) {
             ConfirmVerificationResult(
                 success = false,
-                userErrors = listOf(Error(ex.message))
+                userErrors = listOf(Error(ex.message ?: ""))
             )
         } catch (ex: DgsEntityNotFoundException) {
             ConfirmVerificationResult(
@@ -158,7 +158,7 @@ class VerificationMutation(
     }
 
     @DgsMutation
-    // @PreAuthorize("@servletUtil.isIntranet()")
+    @PreAuthorize("@blServletUtils.isIntranet()")
     fun resetVerification(
         @InputArgument objectKey: ObjectKey,
         @InputArgument(collectionType = VerificationStatus::class) overrideStatus: VerificationStatus?

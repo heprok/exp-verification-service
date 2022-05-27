@@ -1,13 +1,13 @@
 package com.briolink.expverificationservice.api.dataloader
 
 import com.briolink.expverificationservice.api.service.verifcation.workexperince.WorkExperienceVerificationService
-import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.entity.UserJobPositionReadEntity
 import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserJobPositionReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.WorkExperienceVerificationReadRepository
+import com.briolink.lib.common.utils.BlDataLoader
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import kotlin.random.Random
@@ -20,7 +20,11 @@ class WorkExperienceVerificationDataLoader(
     private val userJobPositionReadRepository: UserJobPositionReadRepository,
     private val companyReadRepository: CompanyReadRepository,
     private val workExperienceVerificationService: WorkExperienceVerificationService
-) : DataLoader() {
+) : BlDataLoader() {
+
+    companion object {
+        const val COUNT_WORKEXP_VERIFICATION = 20
+    }
 
     override fun loadData() {
         if (workExperienceVerificationReadRepository.count().toInt() == 0 &&

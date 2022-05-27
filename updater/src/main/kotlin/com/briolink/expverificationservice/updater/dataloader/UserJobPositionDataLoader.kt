@@ -1,12 +1,12 @@
 package com.briolink.expverificationservice.updater.dataloader
 
-import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.repository.CompanyReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserJobPositionReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
 import com.briolink.expverificationservice.updater.handler.userjobposition.UserJobPositionEventData
 import com.briolink.expverificationservice.updater.handler.userjobposition.UserJobPositionHandlerService
+import com.briolink.lib.common.utils.BlDataLoader
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.util.UUID
@@ -20,7 +20,12 @@ class UserJobPositionDataLoader(
     private var userJobPositionReadRepository: UserJobPositionReadRepository,
     private var userJobPositionHandlerService: UserJobPositionHandlerService,
 
-) : DataLoader() {
+) : BlDataLoader() {
+
+    companion object {
+        const val COUNT_USER_JOB_POSITION = 100
+    }
+
     private val jobPositionTitles = listOf(
         "Product Manager",
         "IOS developer",

@@ -19,7 +19,7 @@ spring:
         types:
           print:
             banner: false
-        metadata_builder_contributor: com.briolink.expverificationservice.common.jpa.Functions
+        metadata_builder_contributor: com.briolink.lib.common.jpa.Functions
         jdbc:
           batch_size: 60
     generate-ddl: false

@@ -1,12 +1,12 @@
 package com.briolink.expverificationservice.updater.dataloader
 
-import com.briolink.expverificationservice.common.dataloader.DataLoader
 import com.briolink.expverificationservice.common.domain.v1_0.ExpVerificationStatus
 import com.briolink.expverificationservice.common.jpa.read.repository.UniversityReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserEducationReadRepository
 import com.briolink.expverificationservice.common.jpa.read.repository.UserReadRepository
 import com.briolink.expverificationservice.updater.handler.usereducation.UserEducationEventData
 import com.briolink.expverificationservice.updater.handler.usereducation.UserEducationHandlerService
+import com.briolink.lib.common.utils.BlDataLoader
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.util.UUID
@@ -20,7 +20,12 @@ class UserEducationDataLoader(
     private var userEducationReadRepository: UserEducationReadRepository,
     private var userEducationHandlerService: UserEducationHandlerService,
 
-) : DataLoader() {
+) : BlDataLoader() {
+
+    companion object {
+        const val COUNT_USER_EDUCATION = 30
+    }
+
     val degreeList = listOf(
         "Doctor of Philosophy (Ph.D.)",
         "Master's Degree",
